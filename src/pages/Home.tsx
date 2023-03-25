@@ -1,8 +1,16 @@
 import { ContentView, Divider, Frame, PageWrapper, Text, Title } from './App'
 import { useI18n } from 'react-simple-i18n'
+import { useNFTContract } from '../hooks/useContract'
+// import { NFT } from '../constants'
+// import { useActiveWeb3React } from 'hooks'
 
 export default function Home() {
   const { t } = useI18n()
+  // const { chainId } = useActiveWeb3React()
+
+  const nftContract = useNFTContract()
+  console.log(nftContract)
+
   return (
     <PageWrapper>
       <Frame>
@@ -13,7 +21,7 @@ export default function Home() {
           <Text>0</Text>
         </ContentView>
         <ContentView>
-          <Text>{t('text3')}</Text>
+          <Text>{t('test3')}</Text>
           <Text>0</Text>
         </ContentView>
         <ContentView>

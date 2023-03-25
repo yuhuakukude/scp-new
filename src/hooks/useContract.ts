@@ -14,7 +14,8 @@ import { ChainId } from '../constants/chain'
 import { getOtherNetworkLibrary } from 'connectors/MultiNetworkConnector'
 import ERC721_ABI from '../constants/abis/erc721.json'
 import ROUTER_ABI from '../constants/abis/router.json'
-
+import NFT_ABI from '../constants/abis/nft.json'
+import { NFT } from '../constants'
 
 // returns null on errors
 function useContract(
@@ -123,4 +124,9 @@ export function usePairContract(address: string | undefined): Contract | null {
 
 export function useRouterContract(address: string | undefined): Contract | null {
   return useContract(address, ROUTER_ABI.abi, true)
+}
+
+export function useNFTContract(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(NFT[chainId ?? 56]?.address, NFT_ABI, true)
 }

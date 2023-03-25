@@ -61,5 +61,24 @@ export const en = {
   text60: 'Recommended Data',
   text61: 'View referral and team size',
   text62: 'Exchange',
-  text63: 'Exchange now'
+  text63: 'Exchange now',
+  text100: 'Pledge',
+  text101: 'Reward',
+  text102: 'The Total Pledge',
+  text103: 'Cps To Be Withdrawn Income',
+  text104: 'Quantity To Be Pledged',
+  text105: 'Period',
+  text106: '90Days',
+  text107: '150Days',
+  text108: '210Days',
+  text109: 'Demand Pledge',
+  text110: 'Pledge Now',
+  text111: 'Pledged Amount',
+  text112: 'Unlock Time',
+  text113: 'Output Amount',
+  text114: 'Take Out',
+  text115: 'LP Pledge dividens',
+  text116: 'Receive Lp Pledge Dividends',
+  text117:
+    '0.5 Times The Computing Power For Current Deposits, Double The Computing Power For 90 Days, 1.5 Times The Computing Power For 150 Days, And Double The Computing Power For 210 Days'
 }

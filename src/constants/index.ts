@@ -30,6 +30,11 @@ export const LIQUIDITY_TOKEN: { [chainId in ChainId]?: Currency } = {
   [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0x9101AEEfE768dfd8b1F958e87D7A5A5c03c5d98f', 18, 'CPS', 'CPS')
 }
 
+export const NFT: { [chainId in ChainId]: Currency } = {
+  [ChainId.BSC]: new Currency(ChainId.BSCTEST, '0x6931B140BC21a0755c0B7F2A07E9d611e203B16F', 18, 'NFT', 'NFT'),
+  [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0x6931B140BC21a0755c0B7F2A07E9d611e203B16F', 18, 'NFT', 'NFT')
+}
+
 export const autoConnectInjectedEveryone = false
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'

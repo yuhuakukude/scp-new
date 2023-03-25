@@ -18,6 +18,7 @@ import CPS from './CPS'
 import Liquidity from './swap/Liquidity'
 import Inviter from './inviter'
 import Swap from './swap/Swap'
+import Pledge from './pledge/Index'
 // import Footer from 'components/Footer'
 
 const AppWrapper = styled('div')(({ theme }) => ({
@@ -141,6 +142,7 @@ export default function App() {
                     <Route path={routes.inviter} element={<Inviter />} />
                     <Route path={routes.liquidity} element={<Liquidity />} />
                     <Route path={routes.swap} element={<Swap />} />
+                    <Route path={routes.pledge} element={<Pledge />} />
                     <Route path="*" element={<Navigate to={routes.home} replace />} />
                   </Routes>
                 </Web3ReactManager>
