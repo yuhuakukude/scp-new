@@ -10,6 +10,7 @@ import { tryParseAmount } from 'utils/parseAmount'
 import { useActiveWeb3React } from 'hooks'
 import ActionButton from '../../components/Button/ActionButton'
 import { useI18n } from 'react-simple-i18n'
+import { usePledge } from '../../hooks/usePledge'
 
 const Coin = styled('img')`
   width: 21px;
@@ -57,6 +58,7 @@ export default function Index() {
   const periodTypes = [t('text106'), t('text107'), t('text108'), t('text109')]
   const { chainId } = useActiveWeb3React()
   // const chainCPS = CPS[chainId ?? 56]
+  const { lpAmount, unlockTime, deposit, withdraw, claimReward, pendingReward, totalPledgeAmount } = usePledge()
   const chainLiquidityToken = LIQUIDITY_TOKEN[chainId ?? 56]
   const [balanceCanWithdraw, setBalanceCanWithdraw] = useState('')
   // const [takeoutBalance, setTakeoutBalance] = useState('')
@@ -90,7 +92,7 @@ export default function Index() {
               }
             }}
           >
-            <span>1234</span>
+            <span>{pendingReward}</span>
             <span> CPS</span>
           </Text>
         </ContentView>
@@ -105,7 +107,7 @@ export default function Index() {
               }
             }}
           >
-            <span>23135.54637</span>
+            <span>{totalPledgeAmount}</span>
             <span> Lp</span>
           </Text>
         </ContentView>
@@ -188,7 +190,7 @@ export default function Index() {
               }
             }}
           >
-            <span>23135.54637</span>
+            <span>{lpAmount}</span>
             <span> LP</span>
           </Text>
         </ContentView>
