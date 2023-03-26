@@ -17,8 +17,8 @@ import NFTMining from './NFTMining'
 import CPS from './CPS'
 import Liquidity from './swap/Liquidity'
 import Inviter from './inviter'
-import Swap from './swap/Swap'
 import Pledge from './pledge/Index'
+import SwapPage from './swap'
 
 // import Footer from 'components/Footer'
 
@@ -85,17 +85,18 @@ export const TabFrame = styled(Stack)`
   flex-direction: row;
 `
 
-export const Tab = styled(Box)`
-  height: 44px;
-  flex: 1;
-  text-align: center;
-  border: 1px solid #7742ff;
-  border-radius: 50px;
-  line-height: 44px;
-  font-size: 14px;
-  color: #7742ff;
-  font-weight: bold;
-`
+export const Tab = styled(Box)(({ active }: { active?: boolean }) => ({
+  height: 44,
+  backgroundColor: '#ffffff',
+  flex: 1,
+  textAlign: 'center',
+  border: active ? '1px solid #7742ff' : '',
+  borderRadius: 50,
+  lineHeight: '44px',
+  fontSize: 14,
+  color: '#7742ff',
+  fontWeight: 'bold'
+}))
 
 export const Divider = styled(Box)`
   border-bottom: 2px dashed #8d8d8d;
@@ -142,7 +143,7 @@ export default function App() {
                     <Route path={routes.cps} element={<CPS />} />
                     <Route path={routes.inviter} element={<Inviter />} />
                     <Route path={routes.liquidity} element={<Liquidity />} />
-                    <Route path={routes.swap} element={<Swap />} />
+                    <Route path={routes.swap} element={<SwapPage />} />
                     <Route path={routes.pledge} element={<Pledge />} />
 
                     <Route path="*" element={<Navigate to={routes.home} replace />} />

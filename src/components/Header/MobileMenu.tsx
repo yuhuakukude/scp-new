@@ -48,39 +48,41 @@ export default function MobileMenu({ isOpen, onDismiss }: { isOpen: boolean; onD
       }}
     >
       <Box display="grid" gap="15px" height={'100vh'}>
-        {Tabs.map(({ title, route, link, titleContent, subTab }) => {
-          const content = titleContent ?? title
-          return subTab ? (
-            <Accordion placeholder={title} key={title}>
-              {subTab.map(sub => {
-                const subContent = sub.titleContent ?? sub.title
-                return sub.link ? (
-                  <MenuItem key={sub.link}>
-                    <ExternalLink href={sub.link} sx={navLinkSx}>
-                      {subContent}
-                    </ExternalLink>
-                  </MenuItem>
-                ) : (
-                  <MenuItem key={sub.title} onClick={onDismiss}>
-                    <StyledNavLink to={sub.route ?? ''} className={'link'} sx={navLinkSx}>
-                      {subContent}
-                    </StyledNavLink>
-                  </MenuItem>
-                )
-              })}
-            </Accordion>
-          ) : link ? (
-            <ExternalLink href={link} sx={navLinkSx} key={link}>
-              {content}
-            </ExternalLink>
-          ) : (
-            route && (
-              <StyledNavLink key={title} id={`${route}-nav-link`} to={route} sx={navLinkSx} onClick={onDismiss}>
+        <div>
+          {Tabs.map(({ title, route, link, titleContent, subTab }) => {
+            const content = titleContent ?? title
+            return subTab ? (
+              <Accordion placeholder={title} key={title}>
+                {subTab.map(sub => {
+                  const subContent = sub.titleContent ?? sub.title
+                  return sub.link ? (
+                    <MenuItem key={sub.link}>
+                      <ExternalLink href={sub.link} sx={navLinkSx}>
+                        {subContent}
+                      </ExternalLink>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem key={sub.title} onClick={onDismiss}>
+                      <StyledNavLink to={sub.route ?? ''} className={'link'} sx={navLinkSx}>
+                        {subContent}
+                      </StyledNavLink>
+                    </MenuItem>
+                  )
+                })}
+              </Accordion>
+            ) : link ? (
+              <ExternalLink href={link} sx={navLinkSx} key={link}>
                 {content}
-              </StyledNavLink>
+              </ExternalLink>
+            ) : (
+              route && (
+                <StyledNavLink key={title} id={`${route}-nav-link`} to={route} sx={navLinkSx} onClick={onDismiss}>
+                  {content}
+                </StyledNavLink>
+              )
             )
-          )
-        })}
+          })}
+        </div>
       </Box>
     </Drawer>
   )

@@ -144,7 +144,9 @@ export default function Liquidity() {
           })
         })
       )
-      .catch(error => {})
+      .catch(error => {
+        console.log(error)
+      })
   }, [account, addTransaction, chainCPS, chainId, chainUSDT, cpsAmount, deadline, library, routerContract, usdtAmount])
 
   async function onAttemptToApprove() {
@@ -291,7 +293,9 @@ export default function Liquidity() {
             summary: 'Withdraw ' + removeAmount.toSignificant(6) + 'LP'
           })
         })
-        .catch((error: Error) => {})
+        .catch((error: Error) => {
+          console.log(error)
+        })
     }
   }, [
     account,

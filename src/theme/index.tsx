@@ -38,7 +38,7 @@ declare module '@mui/material/styles/createTheme' {
 export const theme = {
   palette: {
     primary: {
-      light: '#ADDFB5',
+      light: '#ffffff',
       main: '#0A0553',
       dark: '#129026',
       contrastText: '#ffffff'
@@ -159,8 +159,9 @@ export const override: any = {
           boxShadow: 'unset'
         },
         '&:disabled': {
-          backgroundColor: theme.palette.primary.light,
-          color: '#464647'
+          backgroundColor: 'transparent',
+          border: '1px solid #7742FF',
+          color: '#7742FF'
         }
       },
       containedSecondary: {
