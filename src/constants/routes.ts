@@ -7,5 +7,6 @@ export const routes = {
   liquidity: '/liquidity',
   inviter: '/inviter',
   test3Desc: '/:id',
-  pledge: '/pledge'
+  pledge: '/pledge',
+  document: '/document'
 }

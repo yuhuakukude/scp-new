@@ -22,7 +22,7 @@ export const USDT: { [chainId in ChainId]: Currency } = {
 }
 
 export const CPS: { [chainId in ChainId]: Currency } = {
-  [ChainId.BSC]: new Currency(ChainId.BSCTEST, '0x40DE0F5f58d5365eD5e638B793bC3F551229CEc9', 18, 'CPS', 'CPS'),
+  [ChainId.BSC]: new Currency(ChainId.BSC, '0x40DE0F5f58d5365eD5e638B793bC3F551229CEc9', 18, 'CPS', 'CPS'),
   [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0xAAD8fFd74434C8E508C92F9C80147CA43ED483cb', 18, 'CPS', 'CPS')
 }
 

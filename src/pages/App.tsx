@@ -19,6 +19,7 @@ import Liquidity from './swap/Liquidity'
 import Inviter from './inviter'
 import Pledge from './pledge/Index'
 import SwapPage from './swap'
+import Document from './document/index'
 
 // import Footer from 'components/Footer'
 
@@ -145,6 +146,7 @@ export default function App() {
                     <Route path={routes.liquidity} element={<Liquidity />} />
                     <Route path={routes.swap} element={<SwapPage />} />
                     <Route path={routes.pledge} element={<Pledge />} />
+                    <Route path={routes.document} element={<Document />} />
 
                     <Route path="*" element={<Navigate to={routes.home} replace />} />
                   </Routes>

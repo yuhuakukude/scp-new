@@ -88,5 +88,13 @@ export const en = {
   text118: 'Partner',
   text119: 'Deep Partner',
   text120: 'If you encounter any problem, please email us in time',
-  text121: 'We respect your privacy'
+  text121: 'We respect your privacy',
+  text122: 'Invite Friends To Earn',
+  text123: 'Cps To Be Unlocked',
+  text124: 'Available Cps',
+  text125: 'Honor Value',
+  text126: 'Liquidity Mining Gives Income',
+  text127: 'NFT Node Mining Income',
+  text128:
+    'After mining and harvesting, 30% will go to the wallet, 20% will be released through preaching, and 50% will be released through 365 antennas, making the ecology more stable Thoughtful suggestion: Do not operate frequently, because you need to pay GAS for '
 }
