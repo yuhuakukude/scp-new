@@ -16,9 +16,10 @@ import ERC721_ABI from '../constants/abis/erc721.json'
 import ROUTER_ABI from '../constants/abis/router.json'
 
 import NFT_ABI from '../constants/abis/nft.json'
+import NFTMine_ABI from '../constants/abis/nftmine.json'
 import PLEDGE_ABI from '../constants/abis/lpmine.json'
 import LPMineLOCK_ABI from '../constants/abis/lpminelock.json'
-import { LPMine_ADDRESS, NFT, LPMineLOCK_ADDRESS } from '../constants'
+import { LPMine_ADDRESS, NFT, LPMineLOCK_ADDRESS, NFTMine_ADDRESS } from '../constants'
 
 // returns null on errors
 function useContract(
@@ -131,6 +132,11 @@ export function useRouterContract(address: string | undefined): Contract | null 
 export function useNFTContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(NFT[chainId ?? 56]?.address, NFT_ABI, true)
+}
+
+export function useNFTMineContract(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(NFTMine_ADDRESS[chainId ?? 56], NFTMine_ABI, true)
 }
 
 export function usePledgeContract(): Contract | null {

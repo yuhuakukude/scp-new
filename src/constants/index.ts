@@ -45,6 +45,11 @@ export const LPMineLOCK_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSCTEST]: '0xE121F1C99fe55a01F67F6E4803c6b00063D6C2D4'
 }
 
+export const NFTMine_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.BSC]: '0xF2e4D9B6Ff865Cd1ede99cd6bd0967BB7686f135',
+  [ChainId.BSCTEST]: '0xF2e4D9B6Ff865Cd1ede99cd6bd0967BB7686f135'
+}
+
 export const autoConnectInjectedEveryone = false
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'

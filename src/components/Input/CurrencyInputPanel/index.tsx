@@ -55,6 +55,9 @@ const ButtonWrapper = styled('div')(({ theme }) => ({
   height: '100%',
   display: 'flex',
   alignItems: 'center',
+  '& .css-1bjdtwy-MuiButtonBase-root-MuiButton-root:hover': {
+    backgroundColor: '#7742ff'
+  },
   [theme.breakpoints.down('md')]: {
     right: 20
   }
@@ -104,8 +107,19 @@ export default function CurrencyInputPanel({
           />
           {currency && onMax && (
             <ButtonWrapper>
-              <Button variant="outlined" sx={{ width: '64px', height: '28px', borderRadius: '20px' }} onClick={onMax}>
-                Max
+              <Button
+                variant="outlined"
+                sx={{
+                  width: '64px',
+                  height: '28px',
+                  borderRadius: '20px',
+                  backgroundColor: '#7742ff',
+                  color: '#fff',
+                  border: 0
+                }}
+                onClick={onMax}
+              >
+                MAX
               </Button>
             </ButtonWrapper>
           )}

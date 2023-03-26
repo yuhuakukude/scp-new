@@ -3,7 +3,7 @@ import { ContentView, Frame, PageWrapper, Title, Text } from '../App'
 import bg from '../swap/long_bg.png'
 import coin from '../coin.png'
 import tether from '../../assets/images/Tether.png'
-import { LIQUIDITY_TOKEN, LPMine_ADDRESS } from '../../constants'
+import { LIQUIDITY_TOKEN, CPS, LPMine_ADDRESS } from '../../constants'
 import CurrencyInputPanel from '../../components/Input/CurrencyInputPanel'
 import { useCallback, useMemo, useState } from 'react'
 import { tryParseAmount } from 'utils/parseAmount'
@@ -18,7 +18,6 @@ import TransactionSubmittedModal from 'components/Modal/TransactionModals/Transa
 import useModal from 'hooks/useModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { useCurrencyBalance } from 'state/wallet/hooks'
-// import JSBI from 'jsbi'
 
 const Coin = styled('img')`
   width: 21px;
@@ -70,21 +69,20 @@ export default function Index() {
     usePledge()
   const [pledgeValue, setPledgeValue] = useState('')
   const chainLiquidityToken = LIQUIDITY_TOKEN[chainId ?? 56]
+  const cpsToken = CPS[chainId ?? 56]
   const [balanceCanWithdraw, setBalanceCanWithdraw] = useState('')
   const [period, setPeriod] = useState('1')
   const [periodTime, setPeriodTime] = useState('7776000000')
   const { showModal, hideModal } = useModal()
   const balanceAmount = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
-  console.log(balanceAmount?.toExact())
-
+  const balanceCanWithdrawAmount = useCurrencyBalance(account ?? undefined, cpsToken)
   const totalPledgeTokenAmount = tryParseAmount(totalPledgeAmount, chainLiquidityToken)
-  // const pledgedAmount = tryParseAmount(lpAmount.toString(), chainLiquidityToken)
+  const balanceOfPledgeAmount = tryParseAmount(balanceOfPledge?.toString(), chainLiquidityToken)
   const inputAmount = tryParseAmount(pledgeValue, chainLiquidityToken || undefined)
   const [approvalState, approveCallback] = useApproveCallback(inputAmount, LPMine_ADDRESS[chainId ?? 56])
   const pendingAmount = tryParseAmount(pendingReward?.toString(), chainLiquidityToken)
-  const balanceCanWithdrawAmount = tryParseAmount(balanceCanWithdraw?.toString(), chainLiquidityToken)
   const releaseTime = useMemo(() => {
-    if (!periodTime || !unlockTime) return
+    if (!periodTime) return
     const sec = Math.abs(Number(unlockTime + periodTime))
     const days = Math.floor(sec / 86400000) || 0
     const hours = Math.floor(sec / 86400000 / 24 / 3600) || 0
@@ -131,7 +129,7 @@ export default function Index() {
   const depositCallback = useCallback(() => {
     if (!account || !inputAmount) return
     showModal(<TransactionPendingModal />)
-    deposit('0x2F3E3281ac47bc1E313BAA5EdAB5C9d7a3aE9366', inputAmount, period)
+    deposit('0x5159ed45c75C406CFCd832caCEE5B5E48eaD568E', inputAmount, period)
       .then(() => {
         hideModal()
         showModal(<TransactionSubmittedModal />)
@@ -167,7 +165,7 @@ export default function Index() {
             <span> CPS</span>
           </Text>
         </ContentView>
-        <ContentView alignItems={'center'}>
+        <ContentView alignItems={'center'} mb={20}>
           <CenterFixedRow>
             <Text>{t('text102')}</Text>
           </CenterFixedRow>
@@ -179,7 +177,7 @@ export default function Index() {
             }}
           >
             <span>{totalPledgeAmount?.toString() ?? '-'}</span>
-            <span> Lp</span>
+            <span> LP</span>
           </Text>
         </ContentView>
 
@@ -208,7 +206,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{balanceOfPledge?.toString() ?? '-'}</span>
+            <span>{balanceOfPledgeAmount?.toSignificant() ?? '-'}</span>
             <span> LP</span>
           </Text>
         </ContentView>
@@ -257,7 +255,7 @@ export default function Index() {
         </ContentView>
         <Box mt={20}>
           <ActionButton
-            disableAction={!inputAmount?.toExact()}
+            disableAction={!inputAmount?.toSignificant() || !balanceAmount?.toSignificant()}
             pendingText={t('text56')}
             onAction={approvalState === ApprovalState.NOT_APPROVED ? approveCallback : depositCallback}
             actionText={approvalState === ApprovalState.NOT_APPROVED ? t('text55') : t('text110')}
@@ -311,18 +309,18 @@ export default function Index() {
             onChange={e => {
               setBalanceCanWithdraw(e.target.value)
             }}
-            currency={chainLiquidityToken}
+            currency={cpsToken}
             value={balanceCanWithdraw || ''}
             onSelectCurrency={() => {}}
             onMax={() => {
-              if (balanceAmount) {
-                setBalanceCanWithdraw(balanceAmount?.toSignificant().toString() ?? '')
+              if (balanceCanWithdrawAmount) {
+                setBalanceCanWithdraw(balanceCanWithdrawAmount?.toSignificant().toString() ?? '')
               }
             }}
           />
           <ActionButton
             width={'100px'}
-            disableAction={!balanceCanWithdrawAmount?.toExact()}
+            disableAction={!balanceCanWithdrawAmount?.toSignificant() || !balanceCanWithdraw}
             onAction={withdrawCallback}
             actionText={t('text114')}
           />
@@ -341,7 +339,11 @@ export default function Index() {
           </Text>
         </ContentView>
         <Box mt={20}>
-          <ActionButton disableAction={!pendingAmount?.toExact()} onAction={claimCallback} actionText={t('text116')} />
+          <ActionButton
+            disableAction={!pendingAmount?.toSignificant()}
+            onAction={claimCallback}
+            actionText={t('text116')}
+          />
         </Box>
       </Frame>
       <Stack

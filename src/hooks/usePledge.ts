@@ -8,6 +8,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useActiveWeb3React } from './index'
 import { LIQUIDITY_TOKEN } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
+// import { BigNumber } from 'bignumber.js'
 
 export function usePledge() {
   const { chainId, account } = useActiveWeb3React()
