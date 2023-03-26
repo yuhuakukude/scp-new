@@ -3,7 +3,7 @@ import { ContentView, Frame, PageWrapper, Title, Text } from '../App'
 import bg from '../swap/long_bg.png'
 import coin from '../coin.png'
 import tether from '../../assets/images/Tether.png'
-import { LIQUIDITY_TOKEN, CPS, LPMine_ADDRESS } from '../../constants'
+import { LIQUIDITY_TOKEN, lpMine_TOKEN, LPMine_ADDRESS } from '../../constants'
 import CurrencyInputPanel from '../../components/Input/CurrencyInputPanel'
 import { useCallback, useMemo, useState } from 'react'
 import { tryParseAmount } from 'utils/parseAmount'
@@ -18,6 +18,8 @@ import TransactionSubmittedModal from 'components/Modal/TransactionModals/Transa
 import useModal from 'hooks/useModal'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { useCurrencyBalance } from 'state/wallet/hooks'
+import { CurrencyAmount } from 'constants/token'
+import JSBI from 'jsbi'
 
 const Coin = styled('img')`
   width: 21px;
@@ -65,22 +67,27 @@ export default function Index() {
   const periodTypes = ['1', '2', '3', '0']
   const { claimableRewards, readyToUnlockBalance } = usePledgeReward()
   const { chainId, account } = useActiveWeb3React()
-  const { balanceOfPledge, lpAmount, unlockTime, deposit, withdraw, claimReward, pendingReward, totalPledgeAmount } =
-    usePledge()
+  const { balanceOfPledge, unlockTime, deposit, withdraw, claimReward, pendingReward, totalPledgeAmount } = usePledge()
   const [pledgeValue, setPledgeValue] = useState('')
   const chainLiquidityToken = LIQUIDITY_TOKEN[chainId ?? 56]
-  const cpsToken = CPS[chainId ?? 56]
+  const lpMineTOKEN = lpMine_TOKEN[chainId ?? 56]
   const [balanceCanWithdraw, setBalanceCanWithdraw] = useState('')
   const [period, setPeriod] = useState('1')
   const [periodTime, setPeriodTime] = useState('7776000000')
   const { showModal, hideModal } = useModal()
   const balanceAmount = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
-  const balanceCanWithdrawAmount = useCurrencyBalance(account ?? undefined, cpsToken)
+  const balanceCanWithdrawAmount = useCurrencyBalance(account ?? undefined, lpMineTOKEN)
   const totalPledgeTokenAmount = tryParseAmount(totalPledgeAmount, chainLiquidityToken)
-  const balanceOfPledgeAmount = tryParseAmount(balanceOfPledge?.toString(), chainLiquidityToken)
+  const balanceOfPledgeAmount =
+    balanceOfPledge &&
+    chainLiquidityToken &&
+    CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(balanceOfPledge))
   const inputAmount = tryParseAmount(pledgeValue, chainLiquidityToken || undefined)
   const [approvalState, approveCallback] = useApproveCallback(inputAmount, LPMine_ADDRESS[chainId ?? 56])
-  const pendingAmount = tryParseAmount(pendingReward?.toString(), chainLiquidityToken)
+  const pendingAmount =
+    chainLiquidityToken &&
+    pendingReward &&
+    CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(pendingReward))
   const releaseTime = useMemo(() => {
     if (!periodTime) return
     const sec = Math.abs(Number(unlockTime + periodTime))
@@ -255,7 +262,11 @@ export default function Index() {
         </ContentView>
         <Box mt={20}>
           <ActionButton
-            disableAction={!inputAmount?.toSignificant() || !balanceAmount?.toSignificant()}
+            disableAction={
+              !inputAmount?.toSignificant() ||
+              !balanceAmount?.toSignificant() ||
+              approvalState === ApprovalState.PENDING
+            }
             pendingText={t('text56')}
             onAction={approvalState === ApprovalState.NOT_APPROVED ? approveCallback : depositCallback}
             actionText={approvalState === ApprovalState.NOT_APPROVED ? t('text55') : t('text110')}
@@ -272,7 +283,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{lpAmount?.toString() ?? '-'}</span>
+            <span>{'qq' ?? '-'}</span>
             <span> LP</span>
           </Text>
         </ContentView>
@@ -305,11 +316,12 @@ export default function Index() {
           }}
         >
           <CurrencyInputPanel
+            method="lpAmount"
             placeholder={t('text113')}
             onChange={e => {
               setBalanceCanWithdraw(e.target.value)
             }}
-            currency={cpsToken}
+            currency={lpMineTOKEN}
             value={balanceCanWithdraw || ''}
             onSelectCurrency={() => {}}
             onMax={() => {

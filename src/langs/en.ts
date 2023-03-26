@@ -84,5 +84,9 @@ export const en = {
   text115: 'LP Pledge dividens',
   text116: 'Receive Lp Pledge Dividends',
   text117:
-    '0.5 Times The Computing Power For Current Deposits, Double The Computing Power For 90 Days, 1.5 Times The Computing Power For 150 Days, And Double The Computing Power For 210 Days'
+    '0.5 Times The Computing Power For Current Deposits, Double The Computing Power For 90 Days, 1.5 Times The Computing Power For 150 Days, And Double The Computing Power For 210 Days',
+  text118: 'Partner',
+  text119: 'Deep Partner',
+  text120: 'If you encounter any problem, please email us in time',
+  text121: 'We respect your privacy'
 }
