@@ -3,14 +3,22 @@ import { ContentView, Frame, PageWrapper, Title, Text } from '../App'
 import bg from '../swap/long_bg.png'
 import coin from '../coin.png'
 import tether from '../../assets/images/Tether.png'
-import { LIQUIDITY_TOKEN } from '../../constants'
+import { LIQUIDITY_TOKEN, LPMine_ADDRESS } from '../../constants'
 import CurrencyInputPanel from '../../components/Input/CurrencyInputPanel'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { tryParseAmount } from 'utils/parseAmount'
 import { useActiveWeb3React } from 'hooks'
 import ActionButton from '../../components/Button/ActionButton'
 import { useI18n } from 'react-simple-i18n'
 import { usePledge } from '../../hooks/usePledge'
+import { usePledgeReward } from '../../hooks/usePledgeReward'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import TransactionPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
+import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
+import useModal from 'hooks/useModal'
+import MessageBox from 'components/Modal/TransactionModals/MessageBox'
+import { useCurrencyBalance } from 'state/wallet/hooks'
+// import JSBI from 'jsbi'
 
 const Coin = styled('img')`
   width: 21px;
@@ -55,24 +63,84 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
 
 export default function Index() {
   const { t } = useI18n()
-  const periodTypes = [t('text106'), t('text107'), t('text108'), t('text109')]
-  const { chainId } = useActiveWeb3React()
-  // const chainCPS = CPS[chainId ?? 56]
-  const { lpAmount, unlockTime, deposit, withdraw, claimReward, pendingReward, totalPledgeAmount } = usePledge()
+  const periodTypes = ['1', '2', '3', '0']
+  const { claimableRewards, readyToUnlockBalance } = usePledgeReward()
+  const { chainId, account } = useActiveWeb3React()
+  const { balanceOfPledge, lpAmount, unlockTime, deposit, withdraw, claimReward, pendingReward, totalPledgeAmount } =
+    usePledge()
+  const [pledgeValue, setPledgeValue] = useState('')
   const chainLiquidityToken = LIQUIDITY_TOKEN[chainId ?? 56]
   const [balanceCanWithdraw, setBalanceCanWithdraw] = useState('')
-  // const [takeoutBalance, setTakeoutBalance] = useState('')
-  // const [outputToken, setOutputToken] = useState(chainCPS)
-  const [period, setPeriod] = useState(periodTypes[0])
+  const [period, setPeriod] = useState('1')
+  const [periodTime, setPeriodTime] = useState('7776000000')
+  const { showModal, hideModal } = useModal()
+  const balanceAmount = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
+  const totalPledgeTokenAmount = tryParseAmount(totalPledgeAmount, chainLiquidityToken)
+  // const pledgedAmount = tryParseAmount(lpAmount.toString(), chainLiquidityToken)
+  const inputAmount = tryParseAmount(pledgeValue, chainLiquidityToken || undefined)
+  const [approvalState, approveCallback] = useApproveCallback(inputAmount, LPMine_ADDRESS[chainId ?? 56])
+  const withdrawAmount = tryParseAmount(pendingReward?.toString(), chainLiquidityToken)
+  const releaseTime = useMemo(() => {
+    if (!periodTime || !unlockTime) return
+    const sec = Math.abs(Number(unlockTime + periodTime))
+    const days = Math.floor(sec / 86400000) || 0
+    const hours = Math.floor(sec / 86400000 / 24 / 3600) || 0
+    const mins = Math.ceil(sec / 86400000 / 24 / 3600 / 60) || 0
+    return `${days} : ${hours} : ${mins}`
+  }, [periodTime, unlockTime])
 
-  const formattedAmounts = useMemo(() => {
-    const withdrawAmount = tryParseAmount(balanceCanWithdraw, chainLiquidityToken)
-    // const takeoutAmount = tryParseAmount(takeoutBalance, outputToken)
-    return {
-      withdrawAmount
-      // takeoutAmount
-    }
-  }, [balanceCanWithdraw, chainLiquidityToken])
+  console.log(approvalState, claimableRewards, readyToUnlockBalance, totalPledgeTokenAmount)
+
+  const withdrawCallback = useCallback(() => {
+    if (!account || !withdrawAmount) return
+    showModal(<TransactionPendingModal />)
+    withdraw(withdrawAmount)
+      .then(() => {
+        hideModal()
+        showModal(<TransactionSubmittedModal />)
+      })
+      .catch((err: any) => {
+        hideModal()
+        showModal(
+          <MessageBox type="error">{err.error && err.error.message ? err.error.message : err?.message}</MessageBox>
+        )
+        console.error(err)
+      })
+  }, [account, hideModal, showModal, withdraw, withdrawAmount])
+
+  const claimCallback = useCallback(() => {
+    if (!account) return
+    showModal(<TransactionPendingModal />)
+    claimReward()
+      .then(() => {
+        hideModal()
+        showModal(<TransactionSubmittedModal />)
+      })
+      .catch((err: any) => {
+        hideModal()
+        showModal(
+          <MessageBox type="error">{err.error && err.error.message ? err.error.message : err?.message}</MessageBox>
+        )
+        console.error(err)
+      })
+  }, [account, claimReward, hideModal, showModal])
+
+  const depositCallback = useCallback(() => {
+    if (!account || !inputAmount) return
+    showModal(<TransactionPendingModal />)
+    deposit('0x2F3E3281ac47bc1E313BAA5EdAB5C9d7a3aE9366', inputAmount, period)
+      .then(() => {
+        hideModal()
+        showModal(<TransactionSubmittedModal />)
+      })
+      .catch((err: any) => {
+        hideModal()
+        showModal(
+          <MessageBox type="error">{err.error && err.error.message ? err.error.message : err?.message}</MessageBox>
+        )
+        console.error(err)
+      })
+  }, [account, deposit, hideModal, inputAmount, period, showModal])
   return (
     <PageWrapper>
       <Frame bg={bg}>
@@ -92,7 +160,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{pendingReward}</span>
+            <span>{pendingReward?.toString() ?? ''}</span>
             <span> CPS</span>
           </Text>
         </ContentView>
@@ -107,7 +175,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{totalPledgeAmount}</span>
+            <span>{totalPledgeAmount?.toString() ?? '-'}</span>
             <span> Lp</span>
           </Text>
         </ContentView>
@@ -115,12 +183,16 @@ export default function Index() {
         <CurrencyInputPanel
           placeholder="Clear Input Amount (USDT/CPS)"
           onChange={e => {
-            setBalanceCanWithdraw(e.target.value)
+            setPledgeValue(e.target.value)
           }}
           currency={chainLiquidityToken}
-          value={formattedAmounts.withdrawAmount?.toExact().toString() || ''}
+          value={pledgeValue}
           onSelectCurrency={() => {}}
-          onMax={() => {}}
+          onMax={() => {
+            if (balanceAmount) {
+              setPledgeValue(balanceAmount?.toSignificant().toString() ?? '')
+            }
+          }}
         />
         <ContentView alignItems={'center'}>
           <CenterFixedRow>
@@ -133,7 +205,7 @@ export default function Index() {
               }
             }}
           >
-            <span>23135.54637</span>
+            <span>{balanceOfPledge?.toString() ?? '-'}</span>
             <span> LP</span>
           </Text>
         </ContentView>
@@ -144,7 +216,8 @@ export default function Index() {
               <MuiButton
                 className={period === periodTypes[0] ? 'active' : ''}
                 onClick={() => {
-                  setPeriod(periodTypes[0])
+                  setPeriod('1')
+                  setPeriodTime('7776000000')
                 }}
               >
                 {t('text106')}
@@ -152,7 +225,8 @@ export default function Index() {
               <MuiButton
                 className={period === periodTypes[1] ? 'active' : ''}
                 onClick={() => {
-                  setPeriod(periodTypes[1])
+                  setPeriod('2')
+                  setPeriodTime('12960000000')
                 }}
               >
                 {t('text107')}
@@ -160,7 +234,8 @@ export default function Index() {
               <MuiButton
                 className={period === periodTypes[2] ? 'active' : ''}
                 onClick={() => {
-                  setPeriod(periodTypes[2])
+                  setPeriod('3')
+                  setPeriodTime('18144000000')
                 }}
               >
                 {t('text108')}
@@ -168,7 +243,8 @@ export default function Index() {
               <MuiButton
                 className={period === periodTypes[3] ? 'active' : ''}
                 onClick={() => {
-                  setPeriod(periodTypes[3])
+                  setPeriod('0')
+                  setPeriodTime('0')
                 }}
               >
                 {t('text109')}
@@ -177,7 +253,11 @@ export default function Index() {
           </CenterFixedRow>
         </ContentView>
         <Box mt={20}>
-          <ActionButton onAction={() => {}} actionText={t('text110')} />
+          <ActionButton
+            pendingText={t('text56')}
+            onAction={approvalState === ApprovalState.NOT_APPROVED ? approveCallback : depositCallback}
+            actionText={approvalState === ApprovalState.NOT_APPROVED ? t('text55') : t('text110')}
+          />
         </Box>
         <ContentView alignItems={'center'} mt={20}>
           <CenterFixedRow>
@@ -190,7 +270,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{lpAmount}</span>
+            <span>{lpAmount?.toString() ?? '-'}</span>
             <span> LP</span>
           </Text>
         </ContentView>
@@ -205,7 +285,7 @@ export default function Index() {
               }
             }}
           >
-            <span>23:59:59:99</span>
+            <span>{releaseTime ?? '00:00:00'}</span>
             <span></span>
           </Text>
         </ContentView>
@@ -228,11 +308,15 @@ export default function Index() {
               setBalanceCanWithdraw(e.target.value)
             }}
             currency={chainLiquidityToken}
-            value={formattedAmounts.withdrawAmount?.toExact().toString() || ''}
+            value={balanceCanWithdraw || ''}
             onSelectCurrency={() => {}}
-            onMax={() => {}}
+            onMax={() => {
+              if (balanceAmount) {
+                setBalanceCanWithdraw(balanceAmount?.toSignificant().toString() ?? '')
+              }
+            }}
           />
-          <ActionButton width={'100px'} onAction={() => {}} actionText={t('text114')} />
+          <ActionButton width={'100px'} onAction={withdrawCallback} actionText={t('text114')} />
         </CenterFixedRow>
         <ContentView alignItems={'center'} mt={20}>
           <Text sx={{ color: '#000', fontWeight: 800 }}>{t('text115')}</Text>
@@ -243,23 +327,26 @@ export default function Index() {
               }
             }}
           >
-            <span>23135.54637</span>
+            <span>{pendingReward?.toString() || '-'}</span>
             <span> CPS</span>
           </Text>
         </ContentView>
         <Box mt={20}>
-          <ActionButton onAction={() => {}} actionText={t('text116')} />
+          <ActionButton onAction={claimCallback} actionText={t('text116')} />
         </Box>
       </Frame>
       <Stack
         sx={{
           width: 'calc(100% -60px)',
           maxWidth: 500,
+          fontWeight: 400,
+          fontFamily: 'PingFang SC-Regular, PingFang SC',
+          textAlign: 'center',
           margin: '0 30px 0',
           padding: '0 60px 80px'
         }}
       >
-        <Text>{t('text117')}</Text>
+        <Text lineHeight={1.5}>{t('text117')}</Text>
       </Stack>
     </PageWrapper>
   )

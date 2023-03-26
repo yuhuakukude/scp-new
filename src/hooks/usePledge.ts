@@ -15,8 +15,8 @@ export function usePledge() {
   const { chainId, account } = useActiveWeb3React()
   const contract = usePledgeContract()
   const addTransaction = useTransactionAdder()
-
   const userInfo = useSingleCallResult(contract, 'userInfo', [account ?? undefined])?.result
+  const balanceOfPledge = useSingleCallResult(contract, 'balanceOf', [account ?? undefined])?.result
   const pendingReward = useSingleCallResult(contract, 'getPendingReward', [account ?? undefined])?.result
   const totalPledgeAmount = useSingleCallResult(
     contract,
@@ -96,7 +96,7 @@ export function usePledge() {
   const claimReward = useCallback(async () => {
     if (!account) throw new Error('none account')
     if (!contract) throw new Error('none contract')
-    const method = 'register'
+    const method = 'claimReward'
     console.log('🚀 ~ file: pledge.ts ~ line 18 ~ args', method)
     return contract.estimateGas[method]({ from: account }).then(estimatedGasLimit => {
       return contract[method]({
@@ -113,6 +113,7 @@ export function usePledge() {
     })
   }, [account, addTransaction, contract])
   return {
+    balanceOfPledge,
     lpAmount: userInfo?.lpAmount,
     unlockTime: userInfo?.lastStakeTime,
     deposit,
