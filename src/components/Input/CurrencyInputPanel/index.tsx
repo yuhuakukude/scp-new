@@ -115,7 +115,6 @@ export default function CurrencyInputPanel({
           {currency && onMax && (
             <ButtonWrapper>
               <Button
-<<<<<<< HEAD
                 variant="outlined"
                 sx={{
                   width: '64px',
@@ -128,12 +127,6 @@ export default function CurrencyInputPanel({
                 onClick={onMax}
               >
                 MAX
-=======
-                sx={{ width: '64px', height: '28px', borderRadius: '20px', backgroundColor: '#7742FF' }}
-                onClick={onMax}
-              >
-                Max
->>>>>>> 5d4d3b02061a64b8b2a9a393b35ab44ca14002f4
               </Button>
             </ButtonWrapper>
           )}
