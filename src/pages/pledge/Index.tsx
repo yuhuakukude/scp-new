@@ -75,26 +75,29 @@ export default function Index() {
   const [periodTime, setPeriodTime] = useState('7776000000')
   const { showModal, hideModal } = useModal()
   const balanceAmount = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
+  console.log(balanceAmount?.toExact())
+
   const totalPledgeTokenAmount = tryParseAmount(totalPledgeAmount, chainLiquidityToken)
   // const pledgedAmount = tryParseAmount(lpAmount.toString(), chainLiquidityToken)
   const inputAmount = tryParseAmount(pledgeValue, chainLiquidityToken || undefined)
   const [approvalState, approveCallback] = useApproveCallback(inputAmount, LPMine_ADDRESS[chainId ?? 56])
-  const withdrawAmount = tryParseAmount(pendingReward?.toString(), chainLiquidityToken)
+  const pendingAmount = tryParseAmount(pendingReward?.toString(), chainLiquidityToken)
+  const balanceCanWithdrawAmount = tryParseAmount(balanceCanWithdraw?.toString(), chainLiquidityToken)
   const releaseTime = useMemo(() => {
     if (!periodTime || !unlockTime) return
     const sec = Math.abs(Number(unlockTime + periodTime))
     const days = Math.floor(sec / 86400000) || 0
     const hours = Math.floor(sec / 86400000 / 24 / 3600) || 0
-    const mins = Math.ceil(sec / 86400000 / 24 / 3600 / 60) || 0
-    return `${days} : ${hours} : ${mins}`
+    const mins = Math.floor(sec / 86400000 / 24 / 3600 / 60) || 0
+    return `${days} : ${hours} : ${mins} : 0`
   }, [periodTime, unlockTime])
 
   console.log(approvalState, claimableRewards, readyToUnlockBalance, totalPledgeTokenAmount)
 
   const withdrawCallback = useCallback(() => {
-    if (!account || !withdrawAmount) return
+    if (!account || !balanceCanWithdrawAmount) return
     showModal(<TransactionPendingModal />)
-    withdraw(withdrawAmount)
+    withdraw(balanceCanWithdrawAmount)
       .then(() => {
         hideModal()
         showModal(<TransactionSubmittedModal />)
@@ -106,7 +109,7 @@ export default function Index() {
         )
         console.error(err)
       })
-  }, [account, hideModal, showModal, withdraw, withdrawAmount])
+  }, [account, hideModal, showModal, withdraw, balanceCanWithdrawAmount])
 
   const claimCallback = useCallback(() => {
     if (!account) return
@@ -254,6 +257,7 @@ export default function Index() {
         </ContentView>
         <Box mt={20}>
           <ActionButton
+            disableAction={!inputAmount?.toExact()}
             pendingText={t('text56')}
             onAction={approvalState === ApprovalState.NOT_APPROVED ? approveCallback : depositCallback}
             actionText={approvalState === ApprovalState.NOT_APPROVED ? t('text55') : t('text110')}
@@ -316,7 +320,12 @@ export default function Index() {
               }
             }}
           />
-          <ActionButton width={'100px'} onAction={withdrawCallback} actionText={t('text114')} />
+          <ActionButton
+            width={'100px'}
+            disableAction={!balanceCanWithdrawAmount?.toExact()}
+            onAction={withdrawCallback}
+            actionText={t('text114')}
+          />
         </CenterFixedRow>
         <ContentView alignItems={'center'} mt={20}>
           <Text sx={{ color: '#000', fontWeight: 800 }}>{t('text115')}</Text>
@@ -332,7 +341,7 @@ export default function Index() {
           </Text>
         </ContentView>
         <Box mt={20}>
-          <ActionButton onAction={claimCallback} actionText={t('text116')} />
+          <ActionButton disableAction={!pendingAmount?.toExact()} onAction={claimCallback} actionText={t('text116')} />
         </Box>
       </Frame>
       <Stack

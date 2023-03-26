@@ -8,10 +8,8 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useActiveWeb3React } from './index'
 import { LIQUIDITY_TOKEN } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
-// import { useI18n } from 'react-simple-i18n'
 
 export function usePledge() {
-  // const { t } = useI18n()
   const { chainId, account } = useActiveWeb3React()
   const contract = usePledgeContract()
   const addTransaction = useTransactionAdder()
@@ -74,25 +72,6 @@ export function usePledge() {
     [account, addTransaction, contract]
   )
 
-  // const getPendingReward = useCallback(async () => {
-  //   if (!account) throw new Error('none account')
-  //   if (!contract) throw new Error('none contract')
-  //   const method = 'getPendingReward'
-  //   console.log('🚀 ~ file: stake.ts ~ line 18 ~ args', method)
-  //   return contract.estimateGas[method]({ from: account }).then(estimatedGasLimit => {
-  //     return contract[method]({
-  //       gasLimit: calculateGasMargin(estimatedGasLimit),
-  //       // gasLimit: '3500000',
-  //       from: account
-  //     }).then((response: TransactionResponse) => {
-  //       addTransaction(response, {
-  //         summary: `getPendingReward`
-  //       })
-  //       return response.hash
-  //     })
-  //   })
-  // }, [account, addTransaction, contract])
-
   const claimReward = useCallback(async () => {
     if (!account) throw new Error('none account')
     if (!contract) throw new Error('none contract')
@@ -115,7 +94,7 @@ export function usePledge() {
   return {
     balanceOfPledge,
     lpAmount: userInfo?.lpAmount,
-    unlockTime: userInfo?.lastStakeTime,
+    unlockTime: Number(userInfo?.lastStakeTime),
     deposit,
     withdraw,
     claimReward,
