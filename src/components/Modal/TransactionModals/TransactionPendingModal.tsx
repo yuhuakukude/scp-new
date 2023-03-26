@@ -9,7 +9,7 @@ export default function TransacitonPendingModal({ pendingText }: { pendingText?:
       <Box display="grid" padding="40px 24px" gap="24px" justifyItems="center">
         <Spinner size="40px" />
         <Typography fontWeight={400} fontSize={18}>
-          Waiting For Confirmation
+          Waiting
         </Typography>
         <Typography fontWeight={400} fontSize={14} textAlign="center" color={theme.palette.text.secondary}>
           {pendingText || 'Please initiate transaction in your wallet'}

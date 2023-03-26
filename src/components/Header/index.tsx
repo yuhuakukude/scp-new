@@ -27,7 +27,7 @@ interface Tab extends TabContent {
 export const Tabs: Tab[] = [
   { title: 'Home', route: routes.home },
   { title: 'CPS NFT', route: routes.nftmining },
-  { title: 'CPS 质押', route: routes.staking },
+  { title: 'CPS 质押', route: routes.pledge },
   { title: 'CPS SWAP', route: routes.swap },
   { title: 'cps 邀约', route: routes.inviter },
   { title: 'CPS 协议', route: routes.nftmining }

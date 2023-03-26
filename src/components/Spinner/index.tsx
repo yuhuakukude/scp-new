@@ -38,7 +38,7 @@ export default function Spinner({
         variant="indeterminate"
         disableShrink
         sx={{
-          color: theme => color ?? theme.palette.primary.main,
+          color: color ?? '#7742FF',
           animationDuration: '850ms',
           position: 'absolute',
           left: 0,

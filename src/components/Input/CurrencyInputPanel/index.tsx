@@ -90,9 +90,16 @@ export default function CurrencyInputPanel({
           )}
           {currency && (
             <Typography color={theme.palette.text.primary} fontWeight={500} fontSize={12}>
-              {!hideBalance && !!currency && selectedCurrencyBalance
-                ? (customBalanceText ?? t('text50')) + selectedCurrencyBalance?.toSignificant(6)
-                : ' -'}
+              {!hideBalance && !!currency && selectedCurrencyBalance ? (
+                <>
+                  {customBalanceText ?? t('text50')}{' '}
+                  <span style={{ color: '#7742FF', textDecoration: 'underline #7742FF' }}>
+                    {selectedCurrencyBalance?.toSignificant(6)}
+                  </span>
+                </>
+              ) : (
+                ' -'
+              )}
             </Typography>
           )}
         </Box>
@@ -108,6 +115,7 @@ export default function CurrencyInputPanel({
           {currency && onMax && (
             <ButtonWrapper>
               <Button
+<<<<<<< HEAD
                 variant="outlined"
                 sx={{
                   width: '64px',
@@ -120,6 +128,12 @@ export default function CurrencyInputPanel({
                 onClick={onMax}
               >
                 MAX
+=======
+                sx={{ width: '64px', height: '28px', borderRadius: '20px', backgroundColor: '#7742FF' }}
+                onClick={onMax}
+              >
+                Max
+>>>>>>> 5d4d3b02061a64b8b2a9a393b35ab44ca14002f4
               </Button>
             </ButtonWrapper>
           )}

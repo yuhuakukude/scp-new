@@ -18,6 +18,7 @@ import { BigNumber } from 'ethers'
 import { TransactionResponse } from '@ethersproject/providers'
 import ActionButton from '../../components/Button/ActionButton'
 import bg from './long_bg.png'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 
 enum TYPE {
   INPUT = 'INPUT',
@@ -81,6 +82,8 @@ export default function Swap() {
   const inputAmount = tryParseAmount(formattedAmounts.inputValue, inputToken)
   const outputAmount = tryParseAmount(formattedAmounts.outputValue, outputToken)
 
+  const [approval, approveCallback] = useApproveCallback(inputAmount, ROUTER_ADDRESS[chainId ?? 56])
+
   const addCallback = useCallback(async () => {
     if (!chainId || !library || !account || !deadline || !routerContract || !chainUSDT || !chainCPS)
       throw new Error('missing dependencies')
@@ -97,7 +100,7 @@ export default function Swap() {
       allowedSlippage
     )[0]
 
-    const methodNames = ['swapExactTokensForTokens']
+    const methodNames = ['swapExactTokensForTokensSupportingFeeOnTransferTokens']
     const args = [
       inputAmount.raw.toString(),
       outputAmountMin.toString(),
@@ -142,7 +145,9 @@ export default function Swap() {
               outputToken.symbol
           })
         })
-        .catch((error: Error) => {})
+        .catch((error: Error) => {
+          console.log(error)
+        })
     }
   }, [
     account,
@@ -153,7 +158,8 @@ export default function Swap() {
     chainUSDT,
     deadline,
     inputAmount,
-    inputToken,
+    inputToken.address,
+    inputToken.symbol,
     library,
     outputAmount,
     outputToken,
@@ -163,7 +169,9 @@ export default function Swap() {
   return (
     <Frame bg={bg}>
       <Title>{t('text62')}</Title>
-      <Typography>{t('text63')}</Typography>
+      <Typography textAlign={'center'} fontSize={12} mt={12} fontWeight={400}>
+        {t('text63')}
+      </Typography>
       <Divider />
       <Box mt={29}>
         <CurrencyInputPanel
@@ -187,7 +195,7 @@ export default function Swap() {
               setOutputToken(chainCPS)
             }
           }}
-          style={{ width: 30, height: 30 }}
+          style={{ width: 40, height: 40 }}
           src={icon}
         />
       </Box>
@@ -201,11 +209,20 @@ export default function Swap() {
         onSelectCurrency={() => {}}
       />
       <Box mt={30}>
-        <ActionButton onAction={addCallback} actionText={''} />
+        <ActionButton
+          disableAction={!inputAmount || !outputAmount}
+          pending={approval === ApprovalState.PENDING}
+          onAction={approval === ApprovalState.NOT_APPROVED ? approveCallback : addCallback}
+          actionText={approval === ApprovalState.NOT_APPROVED ? t('text55') : t('text65')}
+        />
       </Box>
       <ContentView>
         <Typography fontSize={12} fontWeight={400}>
           {t('text24')}
+        </Typography>
+        <Typography fontSize={12} fontWeight={400}>
+          1{inputToken.symbol} = <span style={{ color: '#7742FF' }}>{priceInput?.toSignificant(6) ?? ''}</span>{' '}
+          {outputToken.symbol}
         </Typography>
       </ContentView>
     </Frame>
