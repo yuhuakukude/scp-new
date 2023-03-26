@@ -62,6 +62,7 @@ export const cn = {
   text61: '查看推荐人数和团队人数',
   text62: '兑换',
   text63: '立即兑换',
+  text64: '我的钱包',
   text100: '质押',
   text101: '收获',
   text102: '全网总质押',

@@ -23,11 +23,11 @@ export const USDT: { [chainId in ChainId]: Currency } = {
 
 export const CPS: { [chainId in ChainId]: Currency } = {
   [ChainId.BSC]: new Currency(ChainId.BSCTEST, '0x40DE0F5f58d5365eD5e638B793bC3F551229CEc9', 18, 'CPS', 'CPS'),
-  [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0x40DE0F5f58d5365eD5e638B793bC3F551229CEc9', 18, 'CPS', 'CPS')
+  [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0xAAD8fFd74434C8E508C92F9C80147CA43ED483cb', 18, 'CPS', 'CPS')
 }
 
 export const LIQUIDITY_TOKEN: { [chainId in ChainId]?: Currency } = {
-  [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0x9101AEEfE768dfd8b1F958e87D7A5A5c03c5d98f', 18, 'CPS', 'CPS')
+  [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0x322978fc494a559bB4a3Db6aE50aa45B89528C28', 18, 'CPS', 'CPS')
 }
 
 export const NFT: { [chainId in ChainId]: Currency } = {

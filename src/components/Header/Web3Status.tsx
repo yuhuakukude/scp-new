@@ -9,8 +9,8 @@ import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import WalletModal from 'components/Modal/WalletModal/index'
 import Spinner from 'components/Spinner'
-import { ReactComponent as Web3StatusIconSvg } from 'assets/svg/web3status_icon.svg'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { useI18n } from 'react-simple-i18n'
 
 const ActionButton = styled(Button)(({ theme }) => ({
   fontSize: '14px',
@@ -23,12 +23,21 @@ const ActionButton = styled(Button)(({ theme }) => ({
   }
 }))
 
-const Web3StatusIcon = styled(Web3StatusIconSvg)(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    height: '24px',
-    width: '24px'
-  }
-}))
+const AddressWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+`
+const Dot = styled('div')`
+  background: #02b57e;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+`
+const Address = styled(Typography)`
+  color: #7742ff;
+  font-size: 13px;
+  font-weight: normal;
+`
 
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
@@ -36,8 +45,8 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 }
 
 function Web3StatusInner() {
+  const { t } = useI18n()
   const { account, error } = useWeb3React()
-  const { ENSName } = useENSName(account ?? undefined)
   const allTransactions = useAllTransactions()
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
@@ -57,13 +66,13 @@ function Web3StatusInner() {
       >
         <Box
           sx={{
-            height: { xs: 24, sm: 36 },
-            width: { xs: 100, sm: 180 },
+            padding: '0 20px',
+            height: 33,
             borderRadius: '46px',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: theme.palette.background.default
+            border: '1px solid #02B57E'
           }}
         >
           <div />
@@ -80,15 +89,12 @@ function Web3StatusInner() {
             <Typography
               sx={{
                 fontSize: { xs: 9, sm: 14 },
-                mr: { xs: 10, sm: 17 },
-                ml: { xs: 10, sm: 20 },
                 color: theme.palette.text.primary
               }}
             >
-              {ENSName || shortenAddress(account)}
+              {t('text64')}
             </Typography>
           )}
-          <Web3StatusIcon />
         </Box>
       </Box>
     )
@@ -121,7 +127,7 @@ function Web3StatusInner() {
   }
 }
 
-export default function Web3Status() {
+export default function Web3Status({ showAddress }: { showAddress?: boolean }) {
   const { active, account } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
 
@@ -143,7 +149,14 @@ export default function Web3Status() {
 
   return (
     <>
-      <Web3StatusInner />
+      {showAddress && account ? (
+        <AddressWrapper>
+          <Dot />
+          <Address>{shortenAddress(account)}</Address>
+        </AddressWrapper>
+      ) : (
+        <>{!showAddress && <Web3StatusInner />}</>
+      )}
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )

@@ -10,6 +10,8 @@ import logo from '../../assets/svg/logo.svg'
 import { routes } from 'constants/routes'
 import MobileMenu from './MobileMenu'
 import { ArrowBackIos } from '@mui/icons-material'
+import Select from '../Select/Select'
+import { useI18n } from 'react-simple-i18n'
 
 interface TabContent {
   title: string
@@ -117,10 +119,12 @@ const LinksWrapper = muiStyled('div')(({ theme }) => ({
 
 const WebLink = styled(Link)(({}) => ({
   color: '#363636',
-  fontSize: 13
+  fontSize: 13,
+  textDecoration: 'none'
 }))
 
 export default function Header() {
+  const { i18n } = useI18n()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { pathname } = useLocation()
 
@@ -133,11 +137,14 @@ export default function Header() {
       <MobileMenu isOpen={mobileMenuOpen} onDismiss={handleMobileMenueDismiss} />
       <Filler />
       <StyledAppBar>
-        <Stack direction={'row'} alignItems={'center'} height={54}>
+        <Stack direction={'row'} alignItems={'center'} height={49}>
           <ArrowBackIos fontSize={'small'} sx={{ color: 'black' }} />
           <WebLink to={''}>http://www.cps.io</WebLink>
+          <Box sx={{ marginLeft: 'auto' }}>
+            <Web3Status />
+          </Box>
         </Stack>
-        <Stack direction={'row'} width={'100%'} justifyContent={'space-between'} height={54}>
+        <Stack direction={'row'} width={'100%'} justifyContent={'space-between'} height={49}>
           <Box display="flex" alignItems="center">
             <MainLogo id={'logo'} to={'/'}>
               <Image src={logo} alt={'logo'} />
@@ -230,13 +237,31 @@ export default function Header() {
           </Box>
 
           <Box display="flex" alignItems="center" gap={{ xs: '6px', sm: '20px' }}>
-            <Web3Status />
+            <Web3Status showAddress />
+            <Select
+              height={'20px'}
+              style={{
+                background: 'transparent',
+                '& .Mui-disabled.MuiSelect-select.MuiInputBase-input': {
+                  color: theme => theme.palette.text.primary,
+                  WebkitTextFillColor: theme => theme.palette.text.primary
+                }
+              }}
+              defaultValue={'en'}
+              value={i18n.getLang()}
+            >
+              <MenuItem onClick={() => i18n.setLang('en')} selected={i18n.getLang() === 'en'} value={'en'}>
+                EN
+              </MenuItem>
+              <MenuItem onClick={() => i18n.setLang('cn')} selected={i18n.getLang() === 'cn'} value={'cn'}>
+                中文
+              </MenuItem>
+            </Select>
             <ShowOnMobile breakpoint="md">
               <IconButton
                 sx={{
-                  border: '1px solid rgba(0, 0, 0, 0.1)',
-                  height: { xs: 24, sm: 32 },
-                  width: { xs: 24, sm: 32 },
+                  height: { xs: 27, sm: 32 },
+                  width: { xs: 27, sm: 32 },
                   mb: { xs: 0, sm: 15 },
                   mt: { xs: 0, sm: 8 },
                   padding: '4px',
@@ -246,9 +271,18 @@ export default function Header() {
                   setMobileMenuOpen(open => !open)
                 }}
               >
-                <svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="#252525">
-                  <path d="M1 1H13" strokeWidth="1.4" strokeLinecap="round" />
-                  <path d="M1 7H13" strokeWidth="1.4" strokeLinecap="round" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="27.108"
+                  height="21.478"
+                  viewBox="0 0 27.108 21.478"
+                  fill="#7742FF"
+                >
+                  <path
+                    className="a"
+                    d="M259.689,296.437H236.752a2.085,2.085,0,1,1,0-4.17h22.938a2.085,2.085,0,0,1,0,4.17Zm0,8.654H236.752a2.085,2.085,0,1,1,0-4.17h22.938a2.085,2.085,0,0,1,0,4.17Zm0,8.654H236.752a2.085,2.085,0,0,1,0-4.17h22.938a2.085,2.085,0,0,1,0,4.17Z"
+                    transform="translate(-234.666 -292.267)"
+                  />
                 </svg>
               </IconButton>
             </ShowOnMobile>

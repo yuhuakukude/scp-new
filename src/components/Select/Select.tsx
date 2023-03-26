@@ -30,15 +30,11 @@ const StyledInputLabel = styled(MuiInputLabel)(({ theme }) => ({
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   cursor: 'pointer',
   borderRadius: '10px',
-  border: '1px solid transparent',
   position: 'relative',
   padding: '10px',
   '& .MuiSelect-icon': {
     color: theme.palette.primary.contrastText,
     right: '10px'
-  },
-  '&.Mui-focused': {
-    borderColor: theme.palette.primary.main
   }
 }))
 

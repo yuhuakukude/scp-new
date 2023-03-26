@@ -62,6 +62,7 @@ export const en = {
   text61: 'View referral and team size',
   text62: 'Exchange',
   text63: 'Exchange now',
+  text64: 'My wallet',
   text100: 'Pledge',
   text101: 'Reward',
   text102: 'The Total Pledge',
