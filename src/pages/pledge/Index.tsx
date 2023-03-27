@@ -79,11 +79,13 @@ export default function Index() {
   const balanceLpAmount =
     chainLiquidityToken && lpAmount && CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(lpAmount))
   const balanceAmount = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
-  const balanceCanWithdrawAmount = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
+  const balanceCanWithdrawAmount = tryParseAmount(balanceCanWithdraw, chainLiquidityToken)
+
   const totalPledgeTokenAmount =
     totalPledgeAmount &&
     chainLiquidityToken &&
     CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(totalPledgeAmount))
+
   const balanceOfPledgeAmount =
     balanceOfPledge &&
     chainLiquidityToken &&
@@ -96,7 +98,7 @@ export default function Index() {
     CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(pendingReward))
   const releaseTime = useMemo(() => {
     if (!periodTime) return
-    const sec = JSBI.add(JSBI.BigInt(unlockTime ? unlockTime.toString() : 0), JSBI.BigInt(periodTime))
+    const sec = JSBI.add(JSBI.BigInt(unlockTime ? unlockTime.toString() : 0), JSBI.BigInt(Number(periodTime)))
     const time = new Date(Number(sec.toString()))
     console.log(time)
 
@@ -108,7 +110,7 @@ export default function Index() {
   }, [periodTime, unlockTime])
   console.log(releaseTime)
 
-  console.log(approvalState, claimableRewards, readyToUnlockBalance, totalPledgeTokenAmount)
+  console.log(approvalState, claimableRewards, readyToUnlockBalance)
 
   const withdrawCallback = useCallback(() => {
     if (!account || !balanceCanWithdrawAmount) return
@@ -194,7 +196,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{totalPledgeAmount?.toString() ?? '-'}</span>
+            <span>{totalPledgeTokenAmount?.toSignificant() ?? '-'}</span>
             <span> LP</span>
           </Text>
         </ContentView>
@@ -283,7 +285,7 @@ export default function Index() {
             actionText={
               approvalState === ApprovalState.PENDING
                 ? t('text56')
-                : ApprovalState.NOT_APPROVED
+                : approvalState === ApprovalState.NOT_APPROVED
                 ? t('text55')
                 : t('text110')
             }
@@ -337,13 +339,13 @@ export default function Index() {
             onChange={e => {
               setBalanceCanWithdraw(e.target.value)
             }}
-            balance={balanceCanWithdrawAmount?.toSignificant().toString()}
+            balance={balanceLpAmount?.toSignificant().toString()}
             value={balanceCanWithdraw || ''}
             unit={'LP'}
             endAdornment={<></>}
             onMax={() => {
-              if (balanceCanWithdrawAmount) {
-                setBalanceCanWithdraw(balanceCanWithdrawAmount?.toSignificant().toString() ?? '')
+              if (balanceLpAmount) {
+                setBalanceCanWithdraw(balanceLpAmount?.toSignificant().toString() ?? '')
               }
             }}
           />

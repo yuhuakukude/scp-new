@@ -6,7 +6,7 @@ import JSBI from 'jsbi'
 import { calculateGasMargin } from '../utils'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useActiveWeb3React } from './index'
-import { LIQUIDITY_TOKEN } from '../constants'
+import { lpMine_TOKEN } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
 // import { BigNumber } from 'bignumber.js'
 
@@ -20,7 +20,7 @@ export function usePledge() {
   const totalPledgeAmount = useSingleCallResult(
     contract,
     'balanceOf',
-    [LIQUIDITY_TOKEN[chainId ?? 56]?.address],
+    [lpMine_TOKEN[chainId ?? 56]?.address],
     undefined,
     chainId
   )?.result
