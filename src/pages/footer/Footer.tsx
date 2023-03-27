@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material'
-import footerIcon from '../../src/assets/images/footerIcon.png'
+import footerIcon from '../../../src/assets/images/footerIcon.png'
 
 export default function Footer() {
   return (
@@ -20,7 +20,8 @@ export default function Footer() {
           margin: 'auto'
         },
         '& p': {
-          marginTop: 10
+          marginTop: 10,
+          fontSize: 12
         }
       }}
     >

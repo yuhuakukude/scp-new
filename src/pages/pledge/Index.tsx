@@ -21,6 +21,8 @@ import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import { useCurrencyBalance } from 'state/wallet/hooks'
 import { CurrencyAmount } from 'constants/token'
 import JSBI from 'jsbi'
+import Footer from '../footer/Footer'
+import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 
 const Coin = styled('img')`
   width: 21px;
@@ -79,6 +81,8 @@ export default function Index() {
   const balanceLpAmount =
     chainLiquidityToken && lpAmount && CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(lpAmount))
   const balanceAmount = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
+  const { claimSubmitted: isPledging } = useUserHasSubmittedClaim(`${account}_pledge_lp_`)
+
   const balanceCanWithdrawAmount = tryParseAmount(balanceCanWithdraw, chainLiquidityToken)
 
   const totalPledgeTokenAmount =
@@ -98,10 +102,7 @@ export default function Index() {
     CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(pendingReward))
   const releaseTime = useMemo(() => {
     if (!periodTime) return
-    console.log(periodTime)
-
     const sec = (unlockTime ?? 0) + Number(periodTime)
-
     const day = Math.floor(sec / 1000 / 86400)
     const hour = Math.floor(sec / 1000 / 86400 / 1000 / 60 / 60)
     const min = Math.floor(sec / 1000 / 86400 / 1000 / 60)
@@ -278,7 +279,8 @@ export default function Index() {
             disableAction={
               !inputAmount?.toSignificant() ||
               !balanceAmount?.toSignificant() ||
-              approvalState === ApprovalState.PENDING
+              approvalState === ApprovalState.PENDING ||
+              isPledging
             }
             pendingText={t('text56')}
             onAction={approvalState === ApprovalState.NOT_APPROVED ? approveCallback : depositCallback}
@@ -390,6 +392,7 @@ export default function Index() {
       >
         <Text lineHeight={1.5}>{t('text117')}</Text>
       </Stack>
+      <Footer />
     </PageWrapper>
   )
 }

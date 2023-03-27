@@ -26,7 +26,7 @@ import iconCertik from '../../src/assets/images/8138.png'
 import iconMetaMask from '../../src/assets/images/8139.png'
 import iconBiance from '../../src/assets/images/8140.png'
 import iconPancake from '../../src/assets/images/8144.png'
-import footerIcon from '../../src/assets/images/footerIcon.png'
+import Footer from './footer/Footer'
 
 const iconList = [
   icon0,
@@ -237,27 +237,7 @@ export default function Home() {
       >
         {t('text121')}
       </Text>
-      <Stack
-        sx={{
-          width: 'calc(100% - 60px)',
-          maxWidth: 500,
-          display: 'flex',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          fontWeight: 400,
-          fontFamily: 'PingFang SC-Regular, PingFang SC',
-          textAlign: 'center',
-          margin: '0 auto 0',
-          lineHeight: 1.5,
-          padding: '0 60px 80px',
-          '& img': {
-            margin: 'auto'
-          }
-        }}
-      >
-        <img width={32} src={footerIcon} alt="" />
-        <Text mt={10}>Copyright © 2023CPS</Text>
-      </Stack>
+      <Footer />
     </PageWrapper>
   )
 }

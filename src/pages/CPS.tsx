@@ -20,6 +20,7 @@ import { CPS as CPSToken, LIQUIDITY_TOKEN, NFT_TOKEN } from '../constants'
 import JSBI from 'jsbi'
 import arrow from '../assets/images/arrow.png'
 import bg from '../assets/images/bg.png'
+import Footer from './footer/Footer'
 
 const Coin = styled('img')`
   width: 21px;
@@ -348,6 +349,7 @@ export default function CPS() {
           </Stack>
         </>
       )}
+      <Footer />
     </PageWrapper>
   )
 }

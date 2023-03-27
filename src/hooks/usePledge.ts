@@ -41,7 +41,8 @@ export function usePledge() {
           from: account
         }).then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `pledge success`
+            summary: `pledge success`,
+            claim: { recipient: `${account}_pledge_lp_` }
           })
           return response.hash
         })
