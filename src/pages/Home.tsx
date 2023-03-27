@@ -45,10 +45,12 @@ const iconList = [
   icon13,
   icon14
 ]
+
 export default function Home() {
   const { t } = useI18n()
   const { chainId, account } = useActiveWeb3React()
   const [isCopied, setCopied] = useCopyClipboard()
+
   const usdtToken = USDT[chainId ?? 56]
   const cpsToken = CPS[chainId ?? 56]
   const { totalSupply } = useNftMine()

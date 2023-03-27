@@ -84,25 +84,5 @@ export const en = {
   text115: 'LP Pledge dividens',
   text116: 'Receive Lp Pledge Dividends',
   text117:
-    '0.5 Times The Computing Power For Current Deposits, Double The Computing Power For 90 Days, 1.5 Times The Computing Power For 150 Days, And Double The Computing Power For 210 Days',
-  text118: 'Partner',
-  text119: 'Deep Partner',
-  text120: 'If you encounter any problem, please email us in time',
-  text121: 'We respect your privacy',
-  text122: 'Invite Friends To Earn',
-  text123: 'Cps To Be Unlocked',
-  text124: 'Available Cps',
-  text125: 'Honor Value',
-  text126: 'Liquidity Mining Gives Income',
-  text127: 'NFT Node Mining Income',
-  text128:
-    'After mining and harvesting, 30% will go to the wallet, 20% will be released through preaching, and 50% will be released through 365 antennas, making the ecology more stable Thoughtful suggestion: Do not operate frequently, because you need to pay GAS for ',
-  text129: 'Cognitive Cohesion Consensus Circulation Creates Value',
-  text130: 'Welcome to the CPS Community Wikipedia!',
-  text131:
-    'Here you can find everything you need about the CPS community Cognition coheres consensus and circulation creates value Welcome to the CPS Community Wikipedia!',
-  text132: 'Next: CPS Community Culture',
-  text133: 'CPS Community Culture',
-  text134: 'Welcome to the CPS Community',
-  text135: 'Update Time'
+    '0.5 Times The Computing Power For Current Deposits, Double The Computing Power For 90 Days, 1.5 Times The Computing Power For 150 Days, And Double The Computing Power For 210 Days'
 }

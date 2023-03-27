@@ -1,4 +1,4 @@
-import { useNFTMineContract } from './useContract'
+import { useNFTContract, useNFTMineContract } from './useContract'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useCallback } from 'react'
 import { calculateGasMargin } from '../utils'
@@ -10,11 +10,32 @@ import { useTransactionAdder } from '../state/transactions/hooks'
 export function useNftMine() {
   const { account } = useActiveWeb3React()
   const contract = useNFTMineContract()
+  const nftContract = useNFTContract()
   const addTransaction = useTransactionAdder()
   const balanceOfNFT = useSingleCallResult(contract, 'balanceOf', [account ?? ''])?.result
   const totalSupply = useSingleCallResult(contract, 'totalSupply')?.result
   const additionalNFTPower = useSingleCallResult(contract, 'additionalPower', [account ?? ''])?.result
   const getNFTPendingReward = useSingleCallResult(contract, 'getPendingReward', [account ?? ''])?.result
+
+  const mint = useCallback(async () => {
+    if (!account) throw new Error('none account')
+    if (!nftContract) throw new Error('none contract')
+    const method = 'mint'
+    console.log('🚀 ~ file: deposit.ts ~ line 18 ~ args', method)
+    return nftContract.estimateGas[method]({ from: account }).then(estimatedGasLimit => {
+      return nftContract[method]({
+        gasLimit: calculateGasMargin(estimatedGasLimit),
+        // gasLimit: '3500000',
+        from: account
+      }).then((response: TransactionResponse) => {
+        addTransaction(response, {
+          summary: `Mint nft`,
+          userSubmitted: { account: account, action: 'mint' }
+        })
+        return response.hash
+      })
+    })
+  }, [account, addTransaction, nftContract])
 
   const deposit = useCallback(async () => {
     if (!account) throw new Error('none account')
@@ -28,7 +49,7 @@ export function useNftMine() {
         from: account
       }).then((response: TransactionResponse) => {
         addTransaction(response, {
-          summary: `pledge nft success`
+          summary: `Pledge NFT`
         })
         return response.hash
       })
@@ -55,6 +76,7 @@ export function useNftMine() {
     })
   }, [account, addTransaction, contract])
   return {
+    mint,
     balanceOfNFT,
     totalSupply,
     deposit,

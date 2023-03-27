@@ -20,8 +20,8 @@ interface Props {
   disableCurrencySelect?: boolean
   customBalanceText?: string
   hideBalance?: boolean
+  hideCurrency?: boolean
   onSelectCurrency: (cur: Currency) => void
-  method?: string
 }
 
 const InputRow = styled('div')(() => ({
@@ -73,11 +73,11 @@ export default function CurrencyInputPanel({
   currency,
   customBalanceText,
   hideBalance,
-  onChange,
-  method
+  hideCurrency,
+  onChange
 }: Props) {
   const { account } = useActiveWeb3React()
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined, undefined, method)
+  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
   const { t } = useI18n()
 
@@ -85,7 +85,7 @@ export default function CurrencyInputPanel({
     <Box display="grid" gap="24px">
       <div>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          {currency ? (
+          {currency && !hideCurrency ? (
             <LogoText gapSize={'small'} logo={<CurrencyLogo currency={currency} />} text={currency.symbol} />
           ) : (
             <></>
@@ -100,7 +100,7 @@ export default function CurrencyInputPanel({
                   </span>
                 </>
               ) : (
-                ' -'
+                ''
               )}
             </Typography>
           )}

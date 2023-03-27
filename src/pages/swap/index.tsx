@@ -10,8 +10,12 @@ export default function SwapPage() {
   return (
     <PageWrapper>
       <TabFrame gap={10}>
-        <Tab active={isSwap} onClick={() => setIsSwap(true)}>{t('text65')}</Tab>
-        <Tab active={!isSwap} onClick={() => setIsSwap(false)}>{t('text66')}</Tab>
+        <Tab active={isSwap} onClick={() => setIsSwap(true)}>
+          {t('text65')}
+        </Tab>
+        <Tab active={!isSwap} onClick={() => setIsSwap(false)}>
+          {t('text66')}
+        </Tab>
       </TabFrame>
       {isSwap ? <Swap /> : <Liquidity />}
     </PageWrapper>

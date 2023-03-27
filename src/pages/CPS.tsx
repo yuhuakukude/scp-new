@@ -141,7 +141,6 @@ export default function CPS() {
     )
   const [approvalState2, approveCallback2] = useApproveCallback(claimableNftMineLockRewardsAmount, NFTToken?.address)
   console.log(approvalState2, approveCallback2)
-
   return (
     <PageWrapper style={{ marginTop: 0 }}>
       <TabFrame gap={10}>
@@ -184,6 +183,7 @@ export default function CPS() {
       <Frame>
         <img src={img2} style={{ width: 91, margin: 'auto' }} />
         <Title style={{ fontSize: 16 }}>{t('text126')}</Title>
+
         <LineDivider />
         <ContentView>
           <CenterFixedRow>

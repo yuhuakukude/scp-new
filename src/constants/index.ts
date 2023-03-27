@@ -22,7 +22,7 @@ export const USDT: { [chainId in ChainId]: Currency } = {
 }
 
 export const CPS: { [chainId in ChainId]: Currency } = {
-  [ChainId.BSC]: new Currency(ChainId.BSC, '0x40DE0F5f58d5365eD5e638B793bC3F551229CEc9', 18, 'CPS', 'CPS'),
+  [ChainId.BSC]: new Currency(ChainId.BSCTEST, '0x40DE0F5f58d5365eD5e638B793bC3F551229CEc9', 18, 'CPS', 'CPS'),
   [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0xAAD8fFd74434C8E508C92F9C80147CA43ED483cb', 18, 'CPS', 'CPS')
 }
 
@@ -31,10 +31,9 @@ export const LIQUIDITY_TOKEN: { [chainId in ChainId]?: Currency } = {
 }
 
 export const NFT: { [chainId in ChainId]: Currency } = {
-  [ChainId.BSC]: new Currency(ChainId.BSCTEST, '0x6931B140BC21a0755c0B7F2A07E9d611e203B16F', 18, 'NFT', 'NFT'),
+  [ChainId.BSC]: new Currency(ChainId.BSC, '0x6931B140BC21a0755c0B7F2A07E9d611e203B16F', 18, 'NFT', 'NFT'),
   [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0x6931B140BC21a0755c0B7F2A07E9d611e203B16F', 18, 'NFT', 'NFT')
 }
-
 export const NFT_TOKEN: { [chainId in ChainId]: Currency } = {
   [ChainId.BSC]: new Currency(ChainId.BSCTEST, '0xCAB5eCBAf5c775feb6a4C5f74Eb07fdCCD2FCeCB', 0, undefined, undefined),
   [ChainId.BSCTEST]: new Currency(
@@ -56,7 +55,6 @@ export const lpMine_TOKEN: { [chainId in ChainId]: Currency } = {
     undefined
   )
 }
-
 export const LPMine_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSC]: '0x2B393Dcd63540710cf5435C46A0B3cEdd1DEC6C0',
   [ChainId.BSCTEST]: '0x2B393Dcd63540710cf5435C46A0B3cEdd1DEC6C0'
@@ -66,12 +64,10 @@ export const LPMineLOCK_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSC]: '0xE121F1C99fe55a01F67F6E4803c6b00063D6C2D4',
   [ChainId.BSCTEST]: '0xE121F1C99fe55a01F67F6E4803c6b00063D6C2D4'
 }
-
 export const NFTMineLOCK_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSC]: '0xCAB5eCBAf5c775feb6a4C5f74Eb07fdCCD2FCeCB',
   [ChainId.BSCTEST]: '0xCAB5eCBAf5c775feb6a4C5f74Eb07fdCCD2FCeCB'
 }
-
 export const NFTMine_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSC]: '0xF2e4D9B6Ff865Cd1ede99cd6bd0967BB7686f135',
   [ChainId.BSCTEST]: '0xF2e4D9B6Ff865Cd1ede99cd6bd0967BB7686f135'

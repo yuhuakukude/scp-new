@@ -67,7 +67,8 @@ export default function Index() {
   const periodTypes = ['1', '2', '3', '0']
   const { claimableRewards, readyToUnlockBalance } = usePledgeReward()
   const { chainId, account } = useActiveWeb3React()
-  const { balanceOfPledge, unlockTime, deposit, withdraw, claimReward, pendingReward, totalPledgeAmount } = usePledge()
+  const { balanceOfPledge, lpAmount, unlockTime, deposit, withdraw, claimReward, pendingReward, totalPledgeAmount } =
+    usePledge()
   const [pledgeValue, setPledgeValue] = useState('')
   const chainLiquidityToken = LIQUIDITY_TOKEN[chainId ?? 56]
   const lpMineTOKEN = lpMine_TOKEN[chainId ?? 56]
@@ -283,7 +284,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{'qq' ?? '-'}</span>
+            <span>{lpAmount?.toString() ?? '-'}</span>
             <span> LP</span>
           </Text>
         </ContentView>
@@ -316,7 +317,6 @@ export default function Index() {
           }}
         >
           <CurrencyInputPanel
-            method="lpAmount"
             placeholder={t('text113')}
             onChange={e => {
               setBalanceCanWithdraw(e.target.value)

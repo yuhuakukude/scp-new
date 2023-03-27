@@ -68,8 +68,7 @@ function useETHBalance(uncheckedAddress?: string | undefined, chainId?: ChainId)
 function useTokenBalancesWithLoadingIndicator(
   address?: string,
   tokens?: (Currency | undefined)[],
-  chainId?: ChainId,
-  method?: string
+  chainId?: ChainId
 ): [{ [tokenAddress: string]: CurrencyAmount | undefined }, boolean] {
   const validatedTokens: Currency[] = useMemo(
     () => tokens?.filter((t?: Currency): t is Currency => isAddress(t?.address) !== false && !t?.isNative) ?? [],
@@ -81,7 +80,7 @@ function useTokenBalancesWithLoadingIndicator(
   const balances = useMultipleContractSingleData(
     validatedTokenAddresses,
     ERC20_INTERFACE,
-    method ? method : 'balanceOf',
+    'balanceOf',
     [address],
     undefined,
     chainId
@@ -111,8 +110,7 @@ function useTokenBalancesWithLoadingIndicator(
 export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[],
-  chainId?: ChainId,
-  method?: string
+  chainId?: ChainId
 ): (CurrencyAmount | undefined)[] {
   const tokens = useMemo(
     () => currencies?.map(currency => (currency && !currency?.isNative ? currency : undefined)) ?? [],
@@ -120,7 +118,7 @@ export function useCurrencyBalances(
   )
   const eths = useMemo(() => currencies?.find(currency => currency && currency.isNative), [currencies])
 
-  const tokenBalances = useTokenBalancesWithLoadingIndicator(account, tokens, chainId, method)[0]
+  const tokenBalances = useTokenBalancesWithLoadingIndicator(account, tokens, chainId)[0]
 
   const ethBalance = useETHBalance(eths ? account : undefined, chainId)
 
@@ -138,10 +136,9 @@ export function useCurrencyBalances(
 export function useCurrencyBalance(
   account?: string,
   currency?: Currency,
-  chainId?: ChainId,
-  method?: string
+  chainId?: ChainId
 ): CurrencyAmount | undefined {
-  return useCurrencyBalances(account, [currency], chainId, method)[0]
+  return useCurrencyBalances(account, [currency], chainId)[0]
 }
 
 // parse a name or symbol from a token response

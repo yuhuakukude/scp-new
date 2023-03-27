@@ -38,7 +38,6 @@ export default function Liquidity() {
   const chainUSDT = USDT[chainId ?? 56]
   const chainCPS = CPS[chainId ?? 56]
   const chainLiquidityToken = LIQUIDITY_TOKEN[chainId ?? 56]
-  const lpBalance = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
   const [allowedSlippage] = useUserSlippageTolerance()
   const deadline = useTransactionDeadline()
   const addTransaction = useTransactionAdder()
@@ -87,11 +86,29 @@ export default function Liquidity() {
 
   const usdtAmount = tryParseAmount(formattedAmounts.usdtValue, chainUSDT)
   const cpsAmount = tryParseAmount(formattedAmounts.cpsValue, chainCPS)
+  const usdtBalance = useCurrencyBalance(account ?? undefined, chainUSDT)
+  const cpsBalance = useCurrencyBalance(account ?? undefined, chainCPS)
+  const lpBalance = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
+
+  const invalidLiquidityInput = useMemo(() => {
+    return !(!lpBalance || !removeAmount || lpBalance.lessThan(removeAmount))
+  }, [lpBalance, removeAmount])
+
+  const invalidInput = useMemo(() => {
+    return !(
+      !usdtAmount ||
+      !usdtBalance ||
+      !cpsAmount ||
+      !cpsBalance ||
+      usdtBalance.lessThan(usdtAmount) ||
+      cpsBalance.lessThan(cpsAmount)
+    )
+  }, [cpsAmount, cpsBalance, usdtAmount, usdtBalance])
+
   const [approvalUSDT, approveUSDTCallback] = useApproveCallback(usdtAmount, ROUTER_ADDRESS[chainId ?? 56])
   const [approvalCPS, approveCPSCallback] = useApproveCallback(cpsAmount, ROUTER_ADDRESS[chainId ?? 56])
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const [approvalLiquidity, approveLiquidityCallback] = useApproveCallback(removeAmount, ROUTER_ADDRESS[chainId ?? 56])
-
   const liquidityValueUsdt =
     totalSupply &&
     removeAmount &&
@@ -177,7 +194,7 @@ export default function Liquidity() {
     ]
     const message = {
       owner: account,
-      spender: ROUTER_ADDRESS,
+      spender: ROUTER_ADDRESS[chainId ?? 56],
       value: removeAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()
@@ -231,6 +248,7 @@ export default function Liquidity() {
 
     let methodNames: string[], args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
+
     if (approvalLiquidity === ApprovalState.APPROVED) {
       // removeLiquidity
       methodNames = ['removeLiquidity']
@@ -396,7 +414,7 @@ export default function Liquidity() {
             />
           ) : null}
         </Stack>
-        <ActionButton onAction={addCallback} actionText={t('text53')} />
+        <ActionButton disableAction={!invalidInput} onAction={addCallback} actionText={t('text53')} />
       </Box>
       <ContentView>
         <Typography fontSize={12} fontWeight={400}>
@@ -408,18 +426,33 @@ export default function Liquidity() {
       </ContentView>
       <Box mt={30}>
         <CurrencyInputPanel
+          hideCurrency
+          hideBalance
           disableCurrencySelect
           currency={LIQUIDITY_TOKEN[chainId ?? 56]}
           value={typedRemove}
-          onChange={e => setTypeRemove(e.target.value)}
+          onChange={e => {
+            setSignatureData(null)
+            setTypeRemove(e.target.value)
+          }}
           onSelectCurrency={() => {}}
         />
       </Box>
       <Box mt={20}>
-        <ActionButton onAction={onAttemptToApprove} actionText={t('text55')} />
+        <ActionButton
+          disableAction={approvalLiquidity === ApprovalState.APPROVED || signatureData !== null || !removeAmount}
+          onAction={onAttemptToApprove}
+          actionText={t('text55')}
+        />
       </Box>
       <Box mt={20}>
-        <ActionButton onAction={removeCallback} actionText={t('text57')} />
+        <ActionButton
+          disableAction={
+            !invalidLiquidityInput || !(approvalLiquidity === ApprovalState.APPROVED || signatureData !== null)
+          }
+          onAction={removeCallback}
+          actionText={t('text57')}
+        />
       </Box>
     </Frame>
   )

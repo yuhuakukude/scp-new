@@ -10,6 +10,7 @@ export function usePledgeReward() {
   const { account } = useActiveWeb3React()
   const contract = usePledgeRewardContract()
   const addTransaction = useTransactionAdder()
+
   const userInfo = useSingleCallResult(contract, 'userInfo', [account ?? undefined])?.result
   const claimableRewards = useSingleCallResult(contract, 'getClaimableAmount', [account ?? undefined])?.result
 
@@ -32,9 +33,9 @@ export function usePledgeReward() {
       })
     })
   }, [account, addTransaction, contract])
-
   return {
     claim,
+
     claimableRewards,
     readyToUnlockBalance: userInfo?.balance,
     honorValue: userInfo?.totalReffraIndex,

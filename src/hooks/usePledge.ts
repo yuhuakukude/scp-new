@@ -94,7 +94,7 @@ export function usePledge() {
   }, [account, addTransaction, contract])
   return {
     balanceOfPledge,
-    // lpAmount: userInfo?.lpAmount,
+    lpAmount: userInfo?.lpAmount,
     unlockTime: Number(userInfo?.lastStakeTime),
     deposit,
     withdraw,

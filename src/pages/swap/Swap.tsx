@@ -19,6 +19,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import ActionButton from '../../components/Button/ActionButton'
 import bg from './long_bg.png'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 
 enum TYPE {
   INPUT = 'INPUT',
@@ -41,6 +42,8 @@ export default function Swap() {
   const addTransaction = useTransactionAdder()
   const pairContract = usePairContract(chainLiquidityToken?.address)
   const routerContract = useRouterContract(ROUTER_ADDRESS[chainId ?? 56])
+  const inputBalance = useCurrencyBalance(account ?? undefined, inputToken)
+
   const reserves = useSingleCallResult(pairContract, 'getReserves')?.result
   const reserveInput =
     inputToken && outputToken && reserves
@@ -81,6 +84,11 @@ export default function Swap() {
 
   const inputAmount = tryParseAmount(formattedAmounts.inputValue, inputToken)
   const outputAmount = tryParseAmount(formattedAmounts.outputValue, outputToken)
+
+  const invalidInput = useMemo(() => {
+    if (!inputBalance || !inputAmount || inputBalance.lessThan(inputAmount)) return false
+    return true
+  }, [inputAmount, inputBalance])
 
   const [approval, approveCallback] = useApproveCallback(inputAmount, ROUTER_ADDRESS[chainId ?? 56])
 
@@ -210,7 +218,7 @@ export default function Swap() {
       />
       <Box mt={30}>
         <ActionButton
-          disableAction={!inputAmount || !outputAmount}
+          disableAction={(!inputAmount || !outputAmount || !invalidInput) && approval !== ApprovalState.NOT_APPROVED}
           pending={approval === ApprovalState.PENDING}
           onAction={approval === ApprovalState.NOT_APPROVED ? approveCallback : addCallback}
           actionText={approval === ApprovalState.NOT_APPROVED ? t('text55') : t('text65')}
