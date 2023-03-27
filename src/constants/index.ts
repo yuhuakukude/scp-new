@@ -35,6 +35,17 @@ export const NFT: { [chainId in ChainId]: Currency } = {
   [ChainId.BSCTEST]: new Currency(ChainId.BSCTEST, '0x6931B140BC21a0755c0B7F2A07E9d611e203B16F', 18, 'NFT', 'NFT')
 }
 
+export const NFT_TOKEN: { [chainId in ChainId]: Currency } = {
+  [ChainId.BSC]: new Currency(ChainId.BSCTEST, '0xCAB5eCBAf5c775feb6a4C5f74Eb07fdCCD2FCeCB', 0, undefined, undefined),
+  [ChainId.BSCTEST]: new Currency(
+    ChainId.BSCTEST,
+    '0xCAB5eCBAf5c775feb6a4C5f74Eb07fdCCD2FCeCB',
+    0,
+    undefined,
+    undefined
+  )
+}
+
 export const lpMine_TOKEN: { [chainId in ChainId]: Currency } = {
   [ChainId.BSC]: new Currency(ChainId.BSCTEST, '0x2B393Dcd63540710cf5435C46A0B3cEdd1DEC6C0', 0, undefined, undefined),
   [ChainId.BSCTEST]: new Currency(
@@ -54,6 +65,11 @@ export const LPMine_ADDRESS: { [chainId in ChainId]: string } = {
 export const LPMineLOCK_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSC]: '0xE121F1C99fe55a01F67F6E4803c6b00063D6C2D4',
   [ChainId.BSCTEST]: '0xE121F1C99fe55a01F67F6E4803c6b00063D6C2D4'
+}
+
+export const NFTMineLOCK_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.BSC]: '0xCAB5eCBAf5c775feb6a4C5f74Eb07fdCCD2FCeCB',
+  [ChainId.BSCTEST]: '0xCAB5eCBAf5c775feb6a4C5f74Eb07fdCCD2FCeCB'
 }
 
 export const NFTMine_ADDRESS: { [chainId in ChainId]: string } = {

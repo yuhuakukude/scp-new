@@ -96,5 +96,13 @@ export const en = {
   text126: 'Liquidity Mining Gives Income',
   text127: 'NFT Node Mining Income',
   text128:
-    'After mining and harvesting, 30% will go to the wallet, 20% will be released through preaching, and 50% will be released through 365 antennas, making the ecology more stable Thoughtful suggestion: Do not operate frequently, because you need to pay GAS for '
+    'After mining and harvesting, 30% will go to the wallet, 20% will be released through preaching, and 50% will be released through 365 antennas, making the ecology more stable Thoughtful suggestion: Do not operate frequently, because you need to pay GAS for ',
+  text129: 'Cognitive Cohesion Consensus Circulation Creates Value',
+  text130: 'Welcome to the CPS Community Wikipedia!',
+  text131:
+    'Here you can find everything you need about the CPS community Cognition coheres consensus and circulation creates value Welcome to the CPS Community Wikipedia!',
+  text132: 'Next: CPS Community Culture',
+  text133: 'CPS Community Culture',
+  text134: 'Welcome to the CPS Community',
+  text135: 'Update Time'
 }
