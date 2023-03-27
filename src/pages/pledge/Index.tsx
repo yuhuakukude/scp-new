@@ -98,14 +98,14 @@ export default function Index() {
     CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(pendingReward))
   const releaseTime = useMemo(() => {
     if (!periodTime) return
-    const sec = JSBI.add(JSBI.BigInt(unlockTime ? unlockTime.toString() : 0), JSBI.BigInt(Number(periodTime)))
-    const time = new Date(Number(sec.toString()))
-    console.log(time)
+    console.log(periodTime)
 
-    const day = time.getDate().toString().padStart(2, '0')
-    const hour = time.getHours().toString().padStart(2, '0')
-    const min = time.getMinutes().toString().padStart(2, '0')
-    const secs = time.getSeconds().toString().padStart(2, '0')
+    const sec = (unlockTime ?? 0) + Number(periodTime)
+
+    const day = Math.floor(sec / 1000 / 86400)
+    const hour = Math.floor(sec / 1000 / 86400 / 1000 / 60 / 60)
+    const min = Math.floor(sec / 1000 / 86400 / 1000 / 60)
+    const secs = Math.floor(sec / 1000 / 86400 / 1000)
     return `${day} : ${hour} : ${min} : ${secs}`
   }, [periodTime, unlockTime])
   console.log(releaseTime)
