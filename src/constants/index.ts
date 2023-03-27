@@ -55,6 +55,11 @@ export const lpMine_TOKEN: { [chainId in ChainId]: Currency } = {
     undefined
   )
 }
+export const ReffralLock: { [chainId in ChainId]: string } = {
+  [ChainId.BSC]: '0x2B393Dcd63540710cf5435C46A0B3cEdd1DEC6C0',
+  [ChainId.BSCTEST]: '0xB7AA013b8ac91e02A486f6FCfAe6c4AC363142e5'
+}
+
 export const LPMine_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.BSC]: '0x2B393Dcd63540710cf5435C46A0B3cEdd1DEC6C0',
   [ChainId.BSCTEST]: '0xe468276F0F8313EA51CBF22Cbeda39B816790Dd7'
