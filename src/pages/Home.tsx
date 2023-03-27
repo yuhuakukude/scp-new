@@ -169,10 +169,10 @@ export default function Home() {
       >
         <Title>{t('text119')}</Title>
         <Box display={'flex'} flexDirection="row" justifyContent={'space-between'} mt={35}>
-          <img width={'10%'} src={iconCertik} alt="" />
-          <img width={'10%'} src={iconMetaMask} alt="" />
-          <img width={'10%'} src={iconBiance} alt="" />
-          <img width={'10%'} src={iconPancake} alt="" />
+          <img width={'10%'} height={'10%'} src={iconCertik} alt="" />
+          <img width={'10%'} height={'10%'} src={iconMetaMask} alt="" />
+          <img width={'10%'} height={'10%'} src={iconBiance} alt="" />
+          <img width={'10%'} height={'10%'} src={iconPancake} alt="" />
         </Box>
       </Stack>
       <Text
@@ -203,9 +203,18 @@ export default function Home() {
           alignItems: 'center',
           lineHeight: 1.5,
           padding: '0 30px 80px',
+          '& a': {
+            width: '100%',
+            height: 35,
+            lineHeight: '35px',
+            paddingLeft: 20,
+            textAlign: 'left',
+            backgroundColor: '#fff'
+          },
           '& button': {
             maxWidth: 120,
             height: 35,
+            borderRadius: 0,
             lineHeight: '35px',
             backgroundColor: '#8691a8'
           }
