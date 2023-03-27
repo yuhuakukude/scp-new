@@ -54,7 +54,7 @@ export default function InputNumerical({
           <Box display="flex" alignItems="baseline">
             {!!balance && (
               <InputLabel style={{ fontSize: '12px' }}>
-                Available: {balance} {unit ?? 'USDT'}
+                Balance: <span style={{ color: '#7742ff' }}>{balance}</span> {unit ?? 'USDT'}
               </InputLabel>
             )}
           </Box>
@@ -80,12 +80,14 @@ export default function InputNumerical({
             <Box gap="20px" display="flex" alignItems="center" paddingLeft="10px" paddingBottom="2px">
               {endAdornment ? endAdornment : unit && <span>{unit ?? 'USDT'}</span>}
               <Button
-                color="secondary"
                 disabled={props.disabled === true ? true : false}
                 onClick={onMax}
                 style={{
                   width: '60px',
-                  height: '32px'
+                  height: '28px',
+                  color: '#fff',
+                  borderRadius: 20,
+                  backgroundColor: '#7742ff'
                 }}
               >
                 MAX

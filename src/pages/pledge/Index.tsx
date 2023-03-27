@@ -3,8 +3,9 @@ import { ContentView, Frame, PageWrapper, Title, Text } from '../App'
 import bg from '../swap/long_bg.png'
 import coin from '../coin.png'
 import tether from '../../assets/images/Tether.png'
-import { LIQUIDITY_TOKEN, lpMine_TOKEN, LPMine_ADDRESS } from '../../constants'
+import { LIQUIDITY_TOKEN, LPMine_ADDRESS } from '../../constants'
 import CurrencyInputPanel from '../../components/Input/CurrencyInputPanel'
+import Input from '../../components/Input/InputNumerical'
 import { useCallback, useMemo, useState } from 'react'
 import { tryParseAmount } from 'utils/parseAmount'
 import { useActiveWeb3React } from 'hooks'
@@ -71,14 +72,18 @@ export default function Index() {
     usePledge()
   const [pledgeValue, setPledgeValue] = useState('')
   const chainLiquidityToken = LIQUIDITY_TOKEN[chainId ?? 56]
-  const lpMineTOKEN = lpMine_TOKEN[chainId ?? 56]
   const [balanceCanWithdraw, setBalanceCanWithdraw] = useState('')
   const [period, setPeriod] = useState('1')
   const [periodTime, setPeriodTime] = useState('7776000000')
   const { showModal, hideModal } = useModal()
+  const balanceLpAmount =
+    chainLiquidityToken && lpAmount && CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(lpAmount))
   const balanceAmount = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
-  const balanceCanWithdrawAmount = useCurrencyBalance(account ?? undefined, lpMineTOKEN)
-  const totalPledgeTokenAmount = tryParseAmount(totalPledgeAmount, chainLiquidityToken)
+  const balanceCanWithdrawAmount = useCurrencyBalance(account ?? undefined, chainLiquidityToken)
+  const totalPledgeTokenAmount =
+    totalPledgeAmount &&
+    chainLiquidityToken &&
+    CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(totalPledgeAmount))
   const balanceOfPledgeAmount =
     balanceOfPledge &&
     chainLiquidityToken &&
@@ -91,12 +96,17 @@ export default function Index() {
     CurrencyAmount.fromRawAmount(chainLiquidityToken, JSBI.BigInt(pendingReward))
   const releaseTime = useMemo(() => {
     if (!periodTime) return
-    const sec = Math.abs(Number(unlockTime + periodTime))
-    const days = Math.floor(sec / 86400000) || 0
-    const hours = Math.floor(sec / 86400000 / 24 / 3600) || 0
-    const mins = Math.floor(sec / 86400000 / 24 / 3600 / 60) || 0
-    return `${days} : ${hours} : ${mins} : 0`
+    const sec = JSBI.add(JSBI.BigInt(unlockTime ? unlockTime.toString() : 0), JSBI.BigInt(periodTime))
+    const time = new Date(Number(sec.toString()))
+    console.log(time)
+
+    const day = time.getDate().toString().padStart(2, '0')
+    const hour = time.getHours().toString().padStart(2, '0')
+    const min = time.getMinutes().toString().padStart(2, '0')
+    const secs = time.getSeconds().toString().padStart(2, '0')
+    return `${day} : ${hour} : ${min} : ${secs}`
   }, [periodTime, unlockTime])
+  console.log(releaseTime)
 
   console.log(approvalState, claimableRewards, readyToUnlockBalance, totalPledgeTokenAmount)
 
@@ -137,7 +147,7 @@ export default function Index() {
   const depositCallback = useCallback(() => {
     if (!account || !inputAmount) return
     showModal(<TransactionPendingModal />)
-    deposit('0x5159ed45c75C406CFCd832caCEE5B5E48eaD568E', inputAmount, period)
+    deposit('0x1CF1e4ad39491FBa09550962e4Ef90E9DC2b65B5', inputAmount, period)
       .then(() => {
         hideModal()
         showModal(<TransactionSubmittedModal />)
@@ -156,7 +166,7 @@ export default function Index() {
         <Title>
           <Coin src={tether} />
           <Coin src={coin} />
-          CPS-LP{t('text100')}
+          CPS-LP {t('text100')}
         </Title>
         <ContentView alignItems={'center'}>
           <CenterFixedRow>
@@ -169,7 +179,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{pendingReward?.toString() ?? ''}</span>
+            <span>{pendingAmount?.toSignificant() ?? ''}</span>
             <span> CPS</span>
           </Text>
         </ContentView>
@@ -270,7 +280,13 @@ export default function Index() {
             }
             pendingText={t('text56')}
             onAction={approvalState === ApprovalState.NOT_APPROVED ? approveCallback : depositCallback}
-            actionText={approvalState === ApprovalState.NOT_APPROVED ? t('text55') : t('text110')}
+            actionText={
+              approvalState === ApprovalState.PENDING
+                ? t('text56')
+                : ApprovalState.NOT_APPROVED
+                ? t('text55')
+                : t('text110')
+            }
           />
         </Box>
         <ContentView alignItems={'center'} mt={20}>
@@ -284,7 +300,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{lpAmount?.toString() ?? '-'}</span>
+            <span>{balanceLpAmount?.toSignificant() ?? '-'}</span>
             <span> LP</span>
           </Text>
         </ContentView>
@@ -316,14 +332,15 @@ export default function Index() {
             }
           }}
         >
-          <CurrencyInputPanel
+          <Input
             placeholder={t('text113')}
             onChange={e => {
               setBalanceCanWithdraw(e.target.value)
             }}
-            currency={lpMineTOKEN}
+            balance={balanceCanWithdrawAmount?.toSignificant().toString()}
             value={balanceCanWithdraw || ''}
-            onSelectCurrency={() => {}}
+            unit={'LP'}
+            endAdornment={<></>}
             onMax={() => {
               if (balanceCanWithdrawAmount) {
                 setBalanceCanWithdraw(balanceCanWithdrawAmount?.toSignificant().toString() ?? '')
@@ -346,7 +363,7 @@ export default function Index() {
               }
             }}
           >
-            <span>{pendingReward?.toString() || '-'}</span>
+            <span>{pendingAmount?.toSignificant() || '-'}</span>
             <span> CPS</span>
           </Text>
         </ContentView>

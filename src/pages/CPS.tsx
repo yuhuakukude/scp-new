@@ -308,7 +308,7 @@ export default function CPS() {
             sx={{
               height: 121,
               backgroundImage: `url(${bg})`,
-              backgroundSize: '100%',
+              backgroundSize: '100% 100%',
               backgroundRepeat: 'no-repeat',
               marginTop: 30,
               padding: '24px'

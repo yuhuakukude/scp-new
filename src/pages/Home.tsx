@@ -255,7 +255,7 @@ export default function Home() {
           }
         }}
       >
-        <img width={64} src={footerIcon} alt="" />
+        <img width={32} src={footerIcon} alt="" />
         <Text mt={10}>Copyright © 2023CPS</Text>
       </Stack>
     </PageWrapper>
